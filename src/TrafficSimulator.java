@@ -8,10 +8,12 @@ public class TrafficSimulator {
 
         int mapSize = 10;
         int currentSize = 0;
-        int x = 0;
-        int y = 0;
+        int x = 2;
+        int y = 3;
 
-        ArrayList map = null;
+        ArrayList<Integer> map = new ArrayList<Integer>();
+        map.add(x,y);
+        System.out.println(map);
 /*
         while (currentSize < mapSize){
             System.out.println(currentSize);
