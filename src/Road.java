@@ -1,7 +1,9 @@
-public class Road {
+import java.io.Serializable;
+
+public class Road implements Serializable {
     private String name;
     private int orientation;
-    private double location;
+    private int location;
 
     String getName() {
         return name;
@@ -14,8 +16,13 @@ public class Road {
     double getLocation() {
         return location;
     }
+    public Road(){
+        name = "";
+        orientation = 0;
+        location = 0;
+    }
 
-    public Road(String name, int orientation, double location) {
+    public Road(String name, int orientation, int location) {
         this.name = name;
         this.orientation = orientation;
         this.location = location;
@@ -23,6 +30,7 @@ public class Road {
     void printRoad(){
         System.out.println("You added a piece of road to your map");
         System.out.println("Name: " + name + "\nOrientation: " + orientation + "\nLocation: " + location);
+
 
     }
 }

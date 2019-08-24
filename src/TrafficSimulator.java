@@ -1,41 +1,84 @@
-import java.text.DecimalFormat;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class TrafficSimulator {
-    public static void main(String[] args) {
-        int mapSize = 100;
-        int trackForLoop = mapSize/10; // rename
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
+        int map = 10; // change to get user input between 1 - 10 for map size
+        int mapSize = map*map;
         int currentSize = 0;
-        int displayMapSize = 0;
+        int[] currentMap = new int[mapSize+1];
 
-        double[] currentMap = new double[mapSize+1];
-        DecimalFormat numberFormat = new DecimalFormat("#.0");
-        createEmptyMap(trackForLoop, currentSize, currentMap);
-
-
-        displayIntroduction(mapSize, trackForLoop, displayMapSize, currentMap, numberFormat);
+        ArrayList<Road> roadArrayList = new ArrayList<>();
+        Road road = new Road();
+        roadArrayList.add(road);
+        createEmptyMap(mapSize, currentSize, currentMap);
+        displayIntroduction(mapSize, map, currentMap, roadArrayList);
     }
 
-    private static void printCurrentMap(int trackForLoop, int displayMapSize, double[] currentMap, DecimalFormat numberFormat) {
-        for (double v : currentMap) {
-            System.out.print(numberFormat.format(v) + ", ");
-            if (displayMapSize == trackForLoop) {
+    private static void printMap(int inputMap, int[] currentMap, ArrayList<Road> roadArrayList) {
+        boolean addRoad = true;
+        int displayMapSize = 0;
+        for (int v : currentMap) {
+            for (Road i : roadArrayList){
+                if (i.getLocation() == v ){
+                    switch (i.getName()) {
+                        case "Straight":
+                            if (i.getOrientation() == 1 || i.getOrientation() == 2) {
+                                System.out.print("|" + ", ");
+                                addRoad = false;
+                            } else if (i.getOrientation() == 3 || i.getOrientation() == 4) {
+                                System.out.print("_" + ", ");
+                                addRoad = false;
+                            }
+                            break;
+
+                        case "4-way intersection":
+                            if (i.getOrientation() == 1 || i.getOrientation() == 2 || i.getOrientation() == 3 || i.getOrientation() == 4) {
+                                System.out.print("+" + ", ");
+                                addRoad = false;
+                            }
+                            break;
+                        case "2-Way intersection":
+                            if (i.getOrientation() == 1) {
+                                System.out.print("T" + ", ");
+                                addRoad = false;
+                            } else if (i.getOrientation() == 2) {
+                                System.out.print("|͟" + ", ");
+                                addRoad = false;
+                            } else if (i.getOrientation() == 3) {
+                                System.out.print("~|" + ", ");
+                                addRoad = false;
+                            } else if (i.getOrientation() == 4) {
+                                System.out.print("|~" + ", ");
+                                addRoad = false;
+                            }
+                            break;
+                    }
+                }
+            }
+
+            if (addRoad) {
+                System.out.print(v + ", ");
+            }
+            if (displayMapSize == inputMap) {
                 System.out.println();
                 displayMapSize = 0;
             }
+            addRoad = true;
             displayMapSize++;
         }
     }
 
-    private static void createEmptyMap(int trackForLoop, int currentSize, double[] currentMap) {
-        for (double i = 0; i<trackForLoop;){
+    private static void createEmptyMap(int mapSize, int currentSize, int[] currentMap) {
+        for (int i = 0; i<mapSize;){
             currentMap[currentSize] = i;
-            i = i + .1;
+            i = i + 1;
             currentSize += 1;
         }
     }
 
-    private static void displayIntroduction(int mapSize, int trackForLoop, int displayMapSize, double[] currentMap, DecimalFormat numberFormat) {
+    private static void displayIntroduction(int mapSize, int trackForLoop, int[] currentMap, ArrayList<Road> roadArrayList) throws IOException, ClassNotFoundException {
         boolean run = true;
         int userInput;
 
@@ -46,13 +89,15 @@ public class TrafficSimulator {
         while (run)
             if (userInput == (1)){
                 System.out.println("Load Map");
+                roadArrayList = loadRoad.invoke();
                 userInput = getUserInputIntro(scanner);
         } else if (userInput == (2)){
                 System.out.println("Save Map");
+                saveRoad(roadArrayList);
                 userInput = getUserInputIntro(scanner);
         } else if (userInput == (3)){
                 System.out.println("Create / edit map");
-                userInput = editMap(userInput, scanner, mapSize, trackForLoop, displayMapSize, currentMap, numberFormat );
+                userInput = editMap(userInput, scanner, mapSize, trackForLoop, currentMap, roadArrayList);
 
             }  else if (userInput == (4)){
                 System.out.println("Run Simulation");
@@ -65,13 +110,28 @@ public class TrafficSimulator {
             }
     }
 
-    private static int editMap(int userInput, Scanner scanner, int mapSize,int trackForLoop, int displayMapSize, double[] currentMap, DecimalFormat numberFormat) {
 
+    private static void saveRoad(ArrayList<Road> roadArrayList) throws IOException {
+        FileOutputStream fout = new FileOutputStream("map.txt");
+        ObjectOutputStream oos = new ObjectOutputStream(fout);
+        oos.writeObject(roadArrayList);
+        fout.close();
+    }
+    private static class loadRoad {
+        private static ArrayList<Road> invoke() throws IOException, ClassNotFoundException {
+            ArrayList<Road> roadArrayList;
+            FileInputStream readRoad = new FileInputStream("map.txt");
+            ObjectInputStream ois = new ObjectInputStream(readRoad);
+            roadArrayList = (ArrayList<Road>) ois.readObject();
+            readRoad.close();
+            return roadArrayList;
+        }
+    }
+
+    private static int editMap(int userInput, Scanner scanner, int mapSize, int trackForLoop, int[] currentMap,  ArrayList<Road> roadArrayList) {
         int roadInput;
         String roadName;
-
         int roadOrientation;
-
         boolean selectRoad = true;
         roadInput = getUserInputRoad(scanner);
         while (selectRoad)
@@ -80,35 +140,39 @@ public class TrafficSimulator {
                 System.out.println("You Selected Straight");
                 roadOrientation = getOrientationRoad(scanner);
 
-                double positionInput = getPositionRoad(scanner, mapSize, trackForLoop, displayMapSize, currentMap, numberFormat);
+                int positionInput = getPositionRoad(scanner, mapSize, trackForLoop, currentMap, roadArrayList);
                 Road road = new Road(roadName, roadOrientation, positionInput);
                 road.printRoad();
-                // add code to add roads to road ArrayList of roads
-
+                roadArrayList.add(road);
                 selectRoad = false;
-                roadInput = getUserInputRoad(scanner);
 
             } else if (roadInput == (2)){
                 roadName = "4-way intersection";
                 System.out.println("You Selected 4 - way intersection");
                 roadOrientation = getOrientationRoad(scanner);
-                double positionInput = getPositionRoad(scanner, mapSize, trackForLoop, displayMapSize, currentMap, numberFormat);
+                int positionInput = getPositionRoad(scanner, mapSize, trackForLoop, currentMap, roadArrayList);
                 Road road = new Road(roadName, roadOrientation, positionInput);
                 road.printRoad();
+                roadArrayList.add(road);
                 selectRoad = false;
-                userInput = getUserInputIntro(scanner);
 
             } else if (roadInput == (3)){
                 roadName = "2-Way intersection";
                 System.out.println("You Selected 2 - way intersection");
                 roadOrientation = getOrientationRoad(scanner);
-                double positionInput = getPositionRoad(scanner, mapSize, trackForLoop, displayMapSize, currentMap, numberFormat);
+                int positionInput = getPositionRoad(scanner, mapSize, trackForLoop, currentMap, roadArrayList);
                 Road road = new Road(roadName, roadOrientation, positionInput);
                 road.printRoad();
+                roadArrayList.add(road);
+                selectRoad = false;
+
+            }else if (roadInput == (4)){
+                System.out.println("Print Map");
+                printMap(trackForLoop, currentMap, roadArrayList);
                 selectRoad = false;
                 userInput = getUserInputIntro(scanner);
 
-            } else if (roadInput == (4)){
+            } else if (roadInput == (5)){
                 System.out.println("Quite");
                 selectRoad = false;
                 userInput = getUserInputIntro(scanner);
@@ -120,34 +184,33 @@ public class TrafficSimulator {
         return userInput;
     }
 
-    private static double getPositionRoad(Scanner scanner, int mapSize, int trackForLoop, int displayMapSize, double[] currentMap, DecimalFormat numberFormat) {
-        double positionInput;
+    private static int getPositionRoad(Scanner scanner, int mapSize, int trackForLoop, int[] currentMap, ArrayList<Road> roadArrayList) {
+        int positionInput;
         boolean positionRun = true;
-        positionInput = getUserInputPosition(scanner, trackForLoop, displayMapSize, currentMap, numberFormat );
-        int mapSizeMax = mapSize/10;
+        positionInput = getUserInputPosition(scanner, trackForLoop, currentMap, roadArrayList);
         while (positionRun)
-            if (positionInput < mapSizeMax){
+            if (positionInput < mapSize){
                 positionRun = false;
 
             } else {
-                positionInput = getUserInputPosition(scanner, trackForLoop, displayMapSize, currentMap, numberFormat );
+                positionInput = getUserInputPosition(scanner, trackForLoop, currentMap, roadArrayList);
             }
         return positionInput;
     }
 
-    private static double getUserInputPosition(Scanner scanner, int trackForLoop, int displayMapSize, double[] currentMap, DecimalFormat numberFormat) {
-        double userInputRoad;
+    private static int getUserInputPosition(Scanner scanner, int trackForLoop, int[] currentMap, ArrayList<Road> roadArrayList) {
+        int userInputRoad;
 
         do {
             System.out.println("Please select where you would like to place the road piece by entering the number corresponding with the spot below");
-            printCurrentMap(trackForLoop, displayMapSize, currentMap, numberFormat);
+            printMap(trackForLoop, currentMap, roadArrayList);
 
-            while (!scanner.hasNextDouble()) {
+            while (!scanner.hasNextInt()) {
                 System.out.println("Please select where you would like to place the road piece by entering the number corresponding with the spot below");
-                printCurrentMap(trackForLoop, displayMapSize, currentMap, numberFormat);
+                printMap(trackForLoop, currentMap, roadArrayList);
                 scanner.next();
             }
-            userInputRoad = scanner.nextDouble();
+            userInputRoad = scanner.nextInt();
         } while (userInputRoad <= 0 );
         return userInputRoad;
     }
@@ -196,14 +259,16 @@ public class TrafficSimulator {
                     "\n (1) Strait " +
                     "\n (2) 4-way intersection " +
                     "\n (3) 2-way intersection " +
-                    "\n (4) Quite ");
+                    "\n (4) Print Map " +
+                    "\n (5) Quite ");
 
             while (!userInput.hasNextInt()) {
                 System.out.println("Please select from a number from the list below to add a piece of road." +
                         "\n (1) Strait " +
                         "\n (2) 4-way intersection " +
                         "\n (3) 2-way intersection " +
-                        "\n (4) Quite ");
+                        "\n (4) Print Map " +
+                        "\n (5) Quite ");
                 userInput.next();
             }
             userInputRoad = userInput.nextInt();
