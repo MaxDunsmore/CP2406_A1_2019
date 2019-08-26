@@ -4,6 +4,8 @@ public class Road implements Serializable {
     private String name;
     private int orientation;
     private int location;
+    private int carsL;
+    private int carsR;
 
     String getName() {
         return name;
