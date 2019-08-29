@@ -11,12 +11,16 @@ public class TrafficSimulator {
         int userInput;
         int numberOfCars;
         int[] currentMap = new int[mapSize];
+        int[] topMap = new int[map + 1];
+        int[] bottomMap = new int[map + 1];
+        int[] leftMap = new int[map + 1];
+        int[] rightMap = new int[map + 1];
+        int currentMapSize = 0;
         boolean run = true;
         String userInputMessage = "Please select from a number from the list below.\n(1) Load Map \n(2) Save Map \n(3) Create / edit map  \n(4) Run Simulation \n(5) Quite Application";
 
-
-
         ArrayList<Road> roadArrayList = new ArrayList<>();
+        ArrayList<Vehicle> vehiclesArrayList = new ArrayList<>();
         createEmptyMap(mapSize, currentSize, currentMap);
 
         System.out.println("Welcome to the traffic simulator\n");
@@ -37,22 +41,23 @@ public class TrafficSimulator {
 
             } else if (userInput == (4)) {
                 System.out.println("Run Simulation");
-                String inputMessage = "Please enter the number of cars you would like in this simulation";
-                numberOfCars = getUserInput(scanner, inputMessage);
-                int[] topMap = new int[map + 1];
-                int[] bottomMap = new int[map];
-                int[] leftMap = new int[map];
-                int[] rightMap = new int[map];
-                int currentMapSize = 0;
-// write code to get map outside for starting simulation
-                getTopMap(map, roadArrayList, topMap, currentMapSize);
-
-                for (int i = 0; i < topMap.length; i++) {
-                    System.out.println(topMap[i]);
+                //String inputMessage = "Please enter the number of cars you would like in this simulation"; // expand later to get input for other vehicles and add to vehicle list
+                //numberOfCars = getUserInput(scanner, inputMessage);
+                numberOfCars = 20;
+                // add method to add cars to vehicleList - pass to simulation
+                for (int i = 0; i < numberOfCars; ) {
+                    Vehicle car = new Vehicle(1, 0, 0, 'n', 0, i, 'u');
+                    vehiclesArrayList.add(car);
+                    i++;
                 }
 
+                getTopMap(map, roadArrayList, topMap, currentMapSize);
+                getBottomMap(map, roadArrayList, bottomMap, currentMapSize);
+                getLeftMap(map, roadArrayList, leftMap, currentMapSize);
+                getRightMap(map, roadArrayList, rightMap, currentMapSize);
+
                 Timer timer = new Timer();
-                timer.schedule(new Simulation(numberOfCars, currentMap, roadArrayList, map), 0, 10000);
+                timer.schedule(new Simulation(numberOfCars, currentMap, roadArrayList, map, topMap, bottomMap, leftMap, rightMap, vehiclesArrayList), 0, 5000);
 
 
                 run = false;
@@ -63,6 +68,42 @@ public class TrafficSimulator {
             } else {
                 userInput = getUserInput(scanner, userInputMessage);
             }
+    }
+
+    private static void getRightMap(int map, ArrayList<Road> roadArrayList, int[] rightMap, int currentMapSize) {
+        int mapSize = map * map;
+        for (int i = map; i <= mapSize; ) {
+            for (Road v : roadArrayList) {
+                if (v.getLocation() == i) {
+                    rightMap[currentMapSize] = i;
+                }
+            }
+            i = i + map;
+        }
+    }
+
+    private static void getLeftMap(int map, ArrayList<Road> roadArrayList, int[] leftMap, int currentMapSize) {
+        int mapSize = map * map;
+        for (int i = 1; i <= mapSize; ) {
+            for (Road v : roadArrayList) {
+                if (v.getLocation() == i) {
+                    leftMap[currentMapSize] = i;
+                }
+            }
+            i = i + map;
+        }
+    }
+
+    private static void getBottomMap(int map, ArrayList<Road> roadArrayList, int[] topMap, int currentMapSize) {
+        int mapSubtraction = map * map;
+        int mapStop = mapSubtraction - map;
+        for (int i = mapSubtraction; i > mapStop; i--, currentMapSize++) {
+            for (Road v : roadArrayList) {
+                if (v.getLocation() == i) {
+                    topMap[currentMapSize] = i;
+                }
+            }
+        }
     }
 
     private static void getTopMap(int map, ArrayList<Road> roadArrayList, int[] topMap, int currentMapSize) {
@@ -240,7 +281,7 @@ public class TrafficSimulator {
                 System.out.println("Right Selected");
                 orientationRun = false;
             } else {
-                getUserInput(scanner, orientationDisplayMessage);
+                orientationInput = getUserInput(scanner, orientationDisplayMessage);
 
             }
         return orientationInput;

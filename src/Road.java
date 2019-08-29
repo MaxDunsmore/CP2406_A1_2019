@@ -22,6 +22,8 @@ public class Road implements Serializable {
         name = "";
         orientation = 0;
         location = 0;
+        carsL = 0;
+        carsR = 0;
     }
 
     public Road(String name, int orientation, int location) {
