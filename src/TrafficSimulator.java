@@ -5,8 +5,10 @@ import java.util.Timer;
 
 public class TrafficSimulator {
     public static void main(String[] args) throws IOException, ClassNotFoundException {
+
+
         int map = 4; // change to get user input between 1 - 10 for map size
-        int mapSize = map*map;
+        int mapSize = map * map;
         int currentSize = 0;
         int userInput;
         int numberOfCars;
@@ -23,9 +25,12 @@ public class TrafficSimulator {
         ArrayList<Vehicle> vehiclesArrayList = new ArrayList<>();
         createEmptyMap(mapSize, currentSize, currentMap);
 
+
         System.out.println("Welcome to the traffic simulator\n");
         Scanner scanner = new Scanner(System.in);
-        userInput = getUserInput(scanner, userInputMessage);
+        // load map automatically
+        roadArrayList = loadRoad.invoke();
+        userInput = 4; //getUserInput(scanner, userInputMessage);
         while (run)
             if (userInput == (1)) {
                 System.out.println("Load Map");
@@ -43,7 +48,7 @@ public class TrafficSimulator {
                 System.out.println("Run Simulation");
                 //String inputMessage = "Please enter the number of cars you would like in this simulation"; // expand later to get input for other vehicles and add to vehicle list
                 //numberOfCars = getUserInput(scanner, inputMessage);
-                numberOfCars = 20;
+                numberOfCars = 2;
                 // add method to add cars to vehicleList - pass to simulation
                 for (int i = 0; i < numberOfCars; ) {
                     Vehicle car = new Vehicle(1, 0, 0, 'n', 0, i, 'u');
@@ -57,7 +62,7 @@ public class TrafficSimulator {
                 getRightMap(map, roadArrayList, rightMap, currentMapSize);
 
                 Timer timer = new Timer();
-                timer.schedule(new Simulation(numberOfCars, currentMap, roadArrayList, map, topMap, bottomMap, leftMap, rightMap, vehiclesArrayList), 0, 5000);
+                timer.schedule(new Simulation(numberOfCars, roadArrayList, topMap, bottomMap, leftMap, rightMap, vehiclesArrayList, map), 0, 2000);
 
 
                 run = false;
@@ -121,8 +126,8 @@ public class TrafficSimulator {
         boolean addRoad = true;
         int displayMapSize = 1;
         for (int v : currentMap) {
-            for (Road i : roadArrayList){
-                if (i.getLocation() == v ){
+            for (Road i : roadArrayList) {
+                if (i.getLocation() == v) {
                     switch (i.getName()) {
                         case "Straight":
                             if (i.getOrientation() == 1 || i.getOrientation() == 2) {
@@ -179,7 +184,6 @@ public class TrafficSimulator {
     }
 
 
-
     private static void saveRoad(ArrayList<Road> roadArrayList) throws IOException {
         FileOutputStream fout = new FileOutputStream("map.txt");
         ObjectOutputStream oos = new ObjectOutputStream(fout);
@@ -200,7 +204,7 @@ public class TrafficSimulator {
                 "\n (5) Quite ";
         roadInput = getUserInput(scanner, roadDisplayMessage);
         while (selectRoad)
-            if (roadInput == (1)){
+            if (roadInput == (1)) {
                 roadName = "Straight";
                 System.out.println("You Selected Straight");
                 roadOrientation = getOrientationRoad(scanner);
@@ -211,7 +215,7 @@ public class TrafficSimulator {
                 roadArrayList.add(road);
                 selectRoad = false;
 
-            } else if (roadInput == (2)){
+            } else if (roadInput == (2)) {
                 roadName = "4-way intersection";
                 System.out.println("You Selected 4 - way intersection");
                 roadOrientation = getOrientationRoad(scanner);
@@ -221,7 +225,7 @@ public class TrafficSimulator {
                 roadArrayList.add(road);
                 selectRoad = false;
 
-            } else if (roadInput == (3)){
+            } else if (roadInput == (3)) {
                 roadName = "2-Way intersection";
                 System.out.println("You Selected 2 - way intersection");
                 roadOrientation = getOrientationRoad(scanner);
@@ -231,13 +235,13 @@ public class TrafficSimulator {
                 roadArrayList.add(road);
                 selectRoad = false;
 
-            }else if (roadInput == (4)){
+            } else if (roadInput == (4)) {
                 System.out.println("Print Map");
                 printMap(currentMap, roadArrayList, map);
                 selectRoad = false;
                 userInput = getUserInput(scanner);
 
-            } else if (roadInput == (5)){
+            } else if (roadInput == (5)) {
                 System.out.println("Quite");
                 selectRoad = false;
                 userInput = getUserInput(scanner);
@@ -253,7 +257,7 @@ public class TrafficSimulator {
         boolean positionRun = true;
         positionInput = getUserInputPosition(scanner, currentMap, roadArrayList, map);
         while (positionRun)
-            if (positionInput < mapSize){
+            if (positionInput < mapSize) {
                 positionRun = false;
 
             } else {
@@ -268,16 +272,16 @@ public class TrafficSimulator {
         String orientationDisplayMessage = "Please select the orientation you would like the piece \n(1) Straight, \n(2) Upside Down \n(3) Left \n(4) Right";
         orientationInput = getUserInput(scanner, orientationDisplayMessage);
         while (orientationRun)
-            if (orientationInput == 1){
+            if (orientationInput == 1) {
                 System.out.println("Straight Selected");
                 orientationRun = false;
-            }else if (orientationInput == (2)){
+            } else if (orientationInput == (2)) {
                 System.out.println("Upside Down Selected");
                 orientationRun = false;
-            } else if (orientationInput == (3)){
+            } else if (orientationInput == (3)) {
                 System.out.println("Left Selected");
                 orientationRun = false;
-            }else if (orientationInput == (4)){
+            } else if (orientationInput == (4)) {
                 System.out.println("Right Selected");
                 orientationRun = false;
             } else {

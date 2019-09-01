@@ -4,9 +4,18 @@ public class Vehicle {
     private int id;
     private int length;
     private int location;
-    private int roadLocation;
+    private double roadLocation;
     private char roadDirection;
     private char roadSide;
+
+    public int getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
     private int speed;
 
     public Vehicle() {
@@ -18,7 +27,7 @@ public class Vehicle {
     }
 
 
-    public Vehicle(int length, int location, int roadLocation, char roadSide, int speed, int id, char roadDirection) {
+    public Vehicle(int length, int location, double roadLocation, char roadSide, int speed, int id, char roadDirection) {
         this.length = length;
         this.location = location;
         this.roadLocation = roadLocation;
@@ -40,19 +49,27 @@ public class Vehicle {
         this.location = location;
     }
 
-    int getRoadLocation() {
+    double getRoadLocation() {
         return roadLocation;
     }
 
-    public void setRoadLocation(int roadLocation) {
+    void setRoadLocation(double roadLocation) {
         this.roadLocation = roadLocation;
     }
 
-    public char getRoadSide() {
+    char getRoadSide() {
         return roadSide;
     }
 
     void setRoadSide(char roadSide) {
         this.roadSide = roadSide;
+    }
+
+    char getRoadDirection() {
+        return roadDirection;
+    }
+
+    void setRoadDirection(char roadDirection) {
+        this.roadDirection = roadDirection;
     }
 }

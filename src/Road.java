@@ -18,7 +18,8 @@ public class Road implements Serializable {
     double getLocation() {
         return location;
     }
-    public Road(){
+
+    public Road() {
         name = "";
         orientation = 0;
         location = 0;
@@ -31,7 +32,8 @@ public class Road implements Serializable {
         this.orientation = orientation;
         this.location = location;
     }
-    void printRoad(){
+
+    void printRoad() {
         System.out.println("You added a piece of road to your map");
         System.out.println("Name: " + name + "\nOrientation: " + orientation + "\nLocation: " + location);
 
