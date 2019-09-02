@@ -1,24 +1,35 @@
 public class Vehicle {
 
+    String getType() {
+        return type;
+    }
 
+    private String type;
     private int id;
+
+    int getLength() {
+        return length;
+    }
+
     private int length;
     private int location;
     private double roadLocation;
     private char roadDirection;
     private char roadSide;
+    private int speed;
 
-    public int getSpeed() {
+    int getSpeed() {
         return speed;
     }
 
-    public void setSpeed(int speed) {
+    void setSpeed(int speed) {
         this.speed = speed;
     }
 
-    private int speed;
+
 
     public Vehicle() {
+        type = "Car";
         length = 1;
         location = 0;
         roadLocation = 0;
@@ -27,7 +38,7 @@ public class Vehicle {
     }
 
 
-    public Vehicle(int length, int location, double roadLocation, char roadSide, int speed, int id, char roadDirection) {
+    public Vehicle(int length, int location, double roadLocation, char roadSide, int speed, int id, char roadDirection, String type) {
         this.length = length;
         this.location = location;
         this.roadLocation = roadLocation;
@@ -35,6 +46,7 @@ public class Vehicle {
         this.speed = speed;
         this.id = id;
         this.roadDirection = roadDirection;
+        this.type = type;
     }
 
     int getId() {

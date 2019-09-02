@@ -5,8 +5,6 @@ import java.util.Timer;
 
 public class TrafficSimulator {
     public static void main(String[] args) throws IOException, ClassNotFoundException {
-
-
         int map = 4; // change to get user input between 1 - 10 for map size
         int mapSize = map * map;
         int currentSize = 0;
@@ -18,11 +16,13 @@ public class TrafficSimulator {
         int[] leftMap = new int[map + 1];
         int[] rightMap = new int[map + 1];
         int currentMapSize = 0;
+        int count=0;
         boolean run = true;
         String userInputMessage = "Please select from a number from the list below.\n(1) Load Map \n(2) Save Map \n(3) Create / edit map  \n(4) Run Simulation \n(5) Quite Application";
 
         ArrayList<Road> roadArrayList = new ArrayList<>();
         ArrayList<Vehicle> vehiclesArrayList = new ArrayList<>();
+        ArrayList<TrafficLight> trafficLightArrayList = new ArrayList<>();
         createEmptyMap(mapSize, currentSize, currentMap);
 
 
@@ -30,7 +30,7 @@ public class TrafficSimulator {
         Scanner scanner = new Scanner(System.in);
         // load map automatically
         roadArrayList = loadRoad.invoke();
-        userInput = 4; //getUserInput(scanner, userInputMessage);
+        userInput = getUserInput(scanner, userInputMessage);
         while (run)
             if (userInput == (1)) {
                 System.out.println("Load Map");
@@ -42,19 +42,36 @@ public class TrafficSimulator {
                 userInput = getUserInput(scanner, userInputMessage);
             } else if (userInput == (3)) {
                 System.out.println("Create / edit map");
-                userInput = editMap(userInput, scanner, mapSize, currentMap, roadArrayList, map);
+                userInput = editMap(userInput, scanner, mapSize, currentMap, roadArrayList,trafficLightArrayList, map);
 
             } else if (userInput == (4)) {
                 System.out.println("Run Simulation");
                 //String inputMessage = "Please enter the number of cars you would like in this simulation"; // expand later to get input for other vehicles and add to vehicle list
                 //numberOfCars = getUserInput(scanner, inputMessage);
-                numberOfCars = 2;
+                numberOfCars = 1;
                 // add method to add cars to vehicleList - pass to simulation
                 for (int i = 0; i < numberOfCars; ) {
-                    Vehicle car = new Vehicle(1, 0, 0, 'n', 0, i, 'u');
+                    Vehicle car = new Vehicle(2, 0, 0, 'n', 0, count, 'u',"Car");
+                    vehiclesArrayList.add(car);
+                    i++;
+                    count++;
+                }
+                int numberOfBus = 0;
+                int numberOfBike = 0;
+                for (int i = 0; i < numberOfBus; ) {
+                    Vehicle car = new Vehicle(6, 0, 0, 'n', 0, count, 'u',"Bus");
                     vehiclesArrayList.add(car);
                     i++;
                 }
+
+                for (int i = 0; i < numberOfBike; ) {
+                    Vehicle car = new Vehicle(1, 0, 0, 'n', 0, count, 'u',"Bike");
+                    vehiclesArrayList.add(car);
+                    i++;
+                }
+                TrafficLight trafficLight = new TrafficLight(3,5,'b');
+                trafficLightArrayList.add(trafficLight);
+
 
                 getTopMap(map, roadArrayList, topMap, currentMapSize);
                 getBottomMap(map, roadArrayList, bottomMap, currentMapSize);
@@ -62,7 +79,7 @@ public class TrafficSimulator {
                 getRightMap(map, roadArrayList, rightMap, currentMapSize);
 
                 Timer timer = new Timer();
-                timer.schedule(new Simulation(numberOfCars, roadArrayList, topMap, bottomMap, leftMap, rightMap, vehiclesArrayList, map), 0, 2000);
+                timer.schedule(new Simulation(numberOfCars, roadArrayList, trafficLightArrayList, topMap, bottomMap, leftMap, rightMap, vehiclesArrayList, map), 0, 1000);
 
 
                 run = false;
@@ -190,8 +207,32 @@ public class TrafficSimulator {
         oos.writeObject(roadArrayList);
         fout.close();
     }
+    private static void getTrafficLightPositionStraight(Scanner scanner, int trafficLightLocation, ArrayList<TrafficLight> trafficLightArrayList) {
+        int trafficLightPosition;
+        boolean selectRoad = true;
+        String roadDisplayMessage = "Please select where you would like the traffic light\n(1) Top of road\n(2) Bottom of road";
+        trafficLightPosition = getUserInput(scanner, roadDisplayMessage);
+        while (selectRoad)
+            if (trafficLightPosition == (1)) {
+                System.out.println("You Selected Top");
+                TrafficLight trafficLight = new TrafficLight(trafficLightLocation,1,'t');
+                trafficLight.printTrafficLight();
+                trafficLightArrayList.add(trafficLight);
+                selectRoad = false;
 
-    private static int editMap(int userInput, Scanner scanner, int mapSize, int[] currentMap, ArrayList<Road> roadArrayList, int map) {
+            }
+            else if (trafficLightPosition == (2) ) {
+                System.out.println("You Selected Bottom");
+                TrafficLight trafficLight = new TrafficLight(trafficLightLocation,1,'b');
+                trafficLightArrayList.add(trafficLight);
+                selectRoad = false;
+
+            }else {
+                trafficLightPosition = getUserInput(scanner, roadDisplayMessage);
+                }
+    }
+
+    private static int editMap(int userInput, Scanner scanner, int mapSize, int[] currentMap, ArrayList<Road> roadArrayList,ArrayList<TrafficLight> trafficLightArrayList, int map) {
         int roadInput;
         String roadName;
         int roadOrientation;
@@ -200,8 +241,9 @@ public class TrafficSimulator {
                 "\n (1) Strait " +
                 "\n (2) 4-way intersection " +
                 "\n (3) 2-way intersection " +
-                "\n (4) Print Map " +
-                "\n (5) Quite ";
+                "\n (4) Add traffic light " +
+                "\n (5) Print Map " +
+                "\n (6) Quite ";
         roadInput = getUserInput(scanner, roadDisplayMessage);
         while (selectRoad)
             if (roadInput == (1)) {
@@ -235,13 +277,34 @@ public class TrafficSimulator {
                 roadArrayList.add(road);
                 selectRoad = false;
 
-            } else if (roadInput == (4)) {
+            }else if (roadInput == (4)) {
+                System.out.println("You Selected Traffic lights");
+                int positionInput = getPositionRoad(scanner, mapSize, currentMap, roadArrayList, map);
+                for (Road r : roadArrayList){
+                    if(r.getLocation() == positionInput){
+                        switch (r.getName()) {
+                            case "Straight":
+                                getTrafficLightPositionStraight(scanner, positionInput, trafficLightArrayList);
+                                selectRoad = false;
+                                break;
+                            case "2-Way intersection":
+                            case "4-Way intersection": {
+                                TrafficLight trafficLight = new TrafficLight(positionInput, 1, 't');
+                                trafficLight.printTrafficLight();
+                                trafficLightArrayList.add(trafficLight);
+                                selectRoad = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+            } else if (roadInput == (5)) {
                 System.out.println("Print Map");
                 printMap(currentMap, roadArrayList, map);
                 selectRoad = false;
                 userInput = getUserInput(scanner);
 
-            } else if (roadInput == (5)) {
+            } else if (roadInput == (6)) {
                 System.out.println("Quite");
                 selectRoad = false;
                 userInput = getUserInput(scanner);

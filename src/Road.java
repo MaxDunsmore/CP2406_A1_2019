@@ -4,8 +4,6 @@ public class Road implements Serializable {
     private String name;
     private int orientation;
     private int location;
-    private int carsL;
-    private int carsR;
 
     String getName() {
         return name;
@@ -23,8 +21,6 @@ public class Road implements Serializable {
         name = "";
         orientation = 0;
         location = 0;
-        carsL = 0;
-        carsR = 0;
     }
 
     public Road(String name, int orientation, int location) {
