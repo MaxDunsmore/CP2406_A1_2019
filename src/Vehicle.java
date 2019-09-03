@@ -1,22 +1,23 @@
 public class Vehicle {
-
-    String getType() {
-        return type;
-    }
-
-    private String type;
-    private int id;
-
-    int getLength() {
-        return length;
-    }
-
     private int length;
     private int location;
     private double roadLocation;
     private char roadDirection;
     private char roadSide;
     private int speed;
+    private String type;
+    private int id;
+    private int chosenDirection;
+
+    String getType() {
+        return type;
+    }
+
+
+    int getLength() {
+        return length;
+    }
+
 
     int getSpeed() {
         return speed;
@@ -27,6 +28,13 @@ public class Vehicle {
     }
 
 
+    public int getChosenDirection() {
+        return chosenDirection;
+    }
+
+    public void setChosenDirection(int chosenDirection) {
+        this.chosenDirection = chosenDirection;
+    }
 
     public Vehicle() {
         type = "Car";
@@ -35,10 +43,11 @@ public class Vehicle {
         roadLocation = 0;
         roadSide = 'n';
         speed = 0;
+        chosenDirection =  0;
     }
 
 
-    public Vehicle(int length, int location, double roadLocation, char roadSide, int speed, int id, char roadDirection, String type) {
+    public Vehicle(int length, int location, double roadLocation, char roadSide, int speed, int id, char roadDirection, String type, int chosenDirection) {
         this.length = length;
         this.location = location;
         this.roadLocation = roadLocation;
@@ -47,6 +56,7 @@ public class Vehicle {
         this.id = id;
         this.roadDirection = roadDirection;
         this.type = type;
+        this.chosenDirection = chosenDirection;
     }
 
     int getId() {
@@ -83,5 +93,21 @@ public class Vehicle {
 
     void setRoadDirection(char roadDirection) {
         this.roadDirection = roadDirection;
+    }
+    void accelerateVehicle(){
+        if (speed < 5) {
+            speed++;
+        }
+    }
+    void decelerateVehicle(){
+        if (speed > 1) {
+           speed--;
+        }
+    }
+    void stopVehicle(){
+        speed = 0;
+    }
+    void moveVehicleRoadLocation(){
+        roadLocation = roadLocation + speed;
     }
 }

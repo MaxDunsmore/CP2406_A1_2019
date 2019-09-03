@@ -48,10 +48,10 @@ public class TrafficSimulator {
                 System.out.println("Run Simulation");
                 //String inputMessage = "Please enter the number of cars you would like in this simulation"; // expand later to get input for other vehicles and add to vehicle list
                 //numberOfCars = getUserInput(scanner, inputMessage);
-                numberOfCars = 2;
+                numberOfCars = 1;
                 // add method to add cars to vehicleList - pass to simulation
                 for (int i = 0; i < numberOfCars; ) {
-                    Vehicle car = new Vehicle(2, 0, 0, 'n', 0, count, 'u',"Car");
+                    Vehicle car = new Vehicle(2, 0, 0, 'n', 0, count, 'u',"Car",0);
                     vehiclesArrayList.add(car);
                     i++;
                     count++;
@@ -59,18 +59,18 @@ public class TrafficSimulator {
                 int numberOfBus = 0;
                 int numberOfBike = 0;
                 for (int i = 0; i < numberOfBus; ) {
-                    Vehicle car = new Vehicle(6, 0, 0, 'n', 0, count, 'u',"Bus");
+                    Vehicle car = new Vehicle(6, 0, 0, 'n', 0, count, 'u',"Bus",0);
                     vehiclesArrayList.add(car);
                     i++;
                 }
 
                 for (int i = 0; i < numberOfBike; ) {
-                    Vehicle car = new Vehicle(1, 0, 0, 'n', 0, count, 'u',"Bike");
+                    Vehicle car = new Vehicle(1, 0, 0, 'n', 0, count, 'u',"Bike",0);
                     vehiclesArrayList.add(car);
                     i++;
                 }
                 TrafficLight trafficLight = new TrafficLight(3,5,'b');
-               // trafficLightArrayList.add(trafficLight);
+                trafficLightArrayList.add(trafficLight);
 
 
                 getTopMap(map, roadArrayList, topMap, currentMapSize);
@@ -79,7 +79,7 @@ public class TrafficSimulator {
                 getRightMap(map, roadArrayList, rightMap, currentMapSize);
 
                 Timer timer = new Timer();
-                timer.schedule(new Simulation(numberOfCars, roadArrayList, trafficLightArrayList, topMap, bottomMap, leftMap, rightMap, vehiclesArrayList, map), 0, 1000);
+                timer.schedule(new Simulation(numberOfCars, roadArrayList, trafficLightArrayList, topMap, bottomMap, leftMap, rightMap, vehiclesArrayList, map, timer), 0, 1000);
 
 
                 run = false;

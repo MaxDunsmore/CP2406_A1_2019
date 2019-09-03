@@ -27,5 +27,13 @@ class TrafficLight {
     void printTrafficLight() {
         System.out.println("You added a traffic light to location " + location );
     }
+    void changeColour(){
+        if (colour < 1){
+            colour = 1;
+        }
+        else if (colour == 1){
+            colour =  0;
+        }
+    }
 }
 
