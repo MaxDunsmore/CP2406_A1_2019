@@ -48,7 +48,7 @@ public class TrafficSimulator {
                 System.out.println("Run Simulation");
                 //String inputMessage = "Please enter the number of cars you would like in this simulation"; // expand later to get input for other vehicles and add to vehicle list
                 //numberOfCars = getUserInput(scanner, inputMessage);
-                numberOfCars = 1;
+                numberOfCars = 2;
                 // add method to add cars to vehicleList - pass to simulation
                 for (int i = 0; i < numberOfCars; ) {
                     Vehicle car = new Vehicle(2, 0, 0, 'n', 0, count, 'u',"Car");
@@ -70,7 +70,7 @@ public class TrafficSimulator {
                     i++;
                 }
                 TrafficLight trafficLight = new TrafficLight(3,5,'b');
-                trafficLightArrayList.add(trafficLight);
+               // trafficLightArrayList.add(trafficLight);
 
 
                 getTopMap(map, roadArrayList, topMap, currentMapSize);
