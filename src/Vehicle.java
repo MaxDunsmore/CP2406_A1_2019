@@ -28,11 +28,11 @@ public class Vehicle {
     }
 
 
-    public int getChosenDirection() {
+    int getChosenDirection() {
         return chosenDirection;
     }
 
-    public void setChosenDirection(int chosenDirection) {
+    void setChosenDirection(int chosenDirection) {
         this.chosenDirection = chosenDirection;
     }
 
