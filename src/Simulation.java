@@ -15,6 +15,7 @@ public class Simulation extends TimerTask {
     private int[] rightMap;
     private boolean accelerateVehicle = true;
     private Timer timer;
+    int count = 1;
 
     Simulation(int cars, ArrayList<Road> roadArrayList, ArrayList<TrafficLight> trafficLightArrayList, int[] topMap, int[] bottomMap, int[] leftMap, int[] rightMap, ArrayList<Vehicle> vehiclesArrayList, int map, Timer timer) {
         this.cars = cars;
@@ -36,31 +37,79 @@ public class Simulation extends TimerTask {
         int roadLocation = 1;
         int roadLength = 20;
         int mapSize = map * map;
+        int cd;
 
         String trafficLightColour = "red";
 
         Random rand = new Random();
         int trafficLight;
-            for (TrafficLight t : trafficLightArrayList){
-                trafficLight = rand.nextInt(((100 - 1) + 1)) + 1;
-                if (t.getChangedColourTimer() == 0){
-                    if (trafficLight > 50){
+        int trafficLight2Way = rand.nextInt(((100 - 1) + 1)) + 1;
+
+
+/*        for (TrafficLight t : trafficLightArrayList) {
+            trafficLight = rand.nextInt(((100 - 1) + 1)) + 1;
+            // if Straight run below code
+            if (t.getRoadType().equals("Straight")) {
+                if (t.getChangedColourTimer() == 0) {
+                    if (trafficLight > 50) {
                         t.changeColour();
-                        if (t.getColour() == 1){
+                        if (t.getColour() == 1) {
                             trafficLightColour = "green";
+                        } else if (t.getColour() == 0) {
+                            trafficLightColour = "red";
                         }
-                        else if (t.getColour() == 0){
+                        System.out.println("Traffic light at " + t.getLocation() + " turned " + trafficLightColour);
+                        t.colourTimer();
+                    }
+                } else {
+                    t.colourTimer();
+                }
+            } else if (t.getRoadType().equals("2-Way intersection")) {
+                if (t.getChangedColourTimer() == 0) {
+                    if (trafficLight2Way > 50) {
+                        t.setLightCycle2Way();
+                        if (t.getLightCycle() == 1) {
+                            if (t.getTrafficLightNumber() == 1) {
+                                t.setGreen();
+                            } else if (t.getTrafficLightNumber() == 2) {
+                                t.setRed();
+                            } else if (t.getTrafficLightNumber() == 3) {
+                                t.setRed();
+                            }
+                        } else if (t.getLightCycle() == 2) {
+                            if (t.getTrafficLightNumber() == 1) {
+                                t.setRed();
+                            } else if (t.getTrafficLightNumber() == 2) {
+                                t.setGreen();
+                            } else if (t.getTrafficLightNumber() == 3) {
+                                t.setRed();
+                            }
+                        } else if (t.getLightCycle() == 3) {
+                            // code for changing 3 to 1 (0) light cycle
+                            if (t.getTrafficLightNumber() == 1) {
+                                t.setGreen();
+                            } else if (t.getTrafficLightNumber() == 2) {
+                                t.setRed();
+                            } else if (t.getTrafficLightNumber() == 3) {
+                                t.setGreen();
+                            }
+                        }
+
+
+                        if (t.getColour() == 1) {
+                            trafficLightColour = "green";
+                        } else if (t.getColour() == 0) {
                             trafficLightColour = "red";
                         }
                         System.out.println("Traffic light at " + t.getLocation() + " turned " + trafficLightColour);
                         t.colourTimer();
                     }
                 }
-                else {
-                    t.colourTimer();
-                }
-
+                t.colourTimer();
             }
+        }
+*/        ////////
+        // traffic lights - if intersection run new code - group lights by location
 
         if (cars > 0) { // check if cars can enter each side of the map
             enterTopMap(roadSideR, roadLocation);
@@ -68,6 +117,16 @@ public class Simulation extends TimerTask {
             enterLeftMap(roadSideL, roadLocation);
             enterRightMap(roadSideR, roadLocation);
         }
+        if (count >= 12){
+            for (TrafficLight trafficLight1 : trafficLightArrayList){
+                trafficLight1.setGreen();
+            }
+        }else {
+            for (TrafficLight trafficLight1 : trafficLightArrayList) {
+                trafficLight1.setRed();
+            }
+        }
+        count++;
 
         for (Vehicle v : vehiclesArrayList) {
             if (v.getLocation() > 0 && v.getLocation() <= map) {
@@ -85,7 +144,7 @@ public class Simulation extends TimerTask {
                                             // else no cars in front, check for traffic lights
                                             for (TrafficLight t : trafficLightArrayList) {
                                                 if (t.getLocation() == v.getLocation()) {
-                                                    if (t.getRoadLocation() == 'b' && t.getColour() > 1 ) {
+                                                    if (t.getRoadLocation() == 'b' && t.getColour() > 1) {
                                                         if (v.getRoadLocation() >= 15 && v.getRoadLocation() <= 20) {
                                                             if (nextRoadLocation < 19) {
                                                                 if (v.getSpeed() > 2) {
@@ -103,15 +162,15 @@ public class Simulation extends TimerTask {
                                                             }
                                                         }
 
-                                                    }else if (t.getRoadLocation() == 't' && t.getColour() > 1) {
+                                                    } else if (t.getRoadLocation() == 't' && t.getColour() > 1) {
                                                         if (t.getRoadLocation() + map == v.getLocation()) {
-                                                            if (roadLength - v.getRoadLocation()+v.getSpeed() <= 2) {
-                                                                if (t.getColour() >= 1 ) {
+                                                            if (roadLength - v.getRoadLocation() + v.getSpeed() <= 2) {
+                                                                if (t.getColour() >= 1) {
                                                                     accelerateVehicle = false;
                                                                     v.stopVehicle();
                                                                 }
-                                                            }else if (roadLength - v.getRoadLocation() <= 5) {
-                                                                if (t.getColour() > 1 ) {
+                                                            } else if (roadLength - v.getRoadLocation() <= 5) {
+                                                                if (t.getColour() > 1) {
                                                                     accelerateVehicle = false;
                                                                     v.decelerateVehicle();
                                                                 }
@@ -124,16 +183,45 @@ public class Simulation extends TimerTask {
                                         }
                                     }
                                 }
-                            } else if (r.getName().equals("2-Way Intersection")) {
+                            } else if (r.getName().equals("2-Way intersection")) {
                                 for (Vehicle v2 : vehiclesArrayList) {
-                                    checkVehicleInFront(v, nextRoadLocation, r, v2);
+                                    if (v.getRoadLocation() < v2.getRoadLocation() && v.getRoadSide() == v2.getRoadSide() && v.getLocation() == v2.getLocation() && v.getId() != v2.getId()) {
+                                        checkVehicleInFront(v, nextRoadLocation, r, v2);
+                                    } else {
+                                        for (TrafficLight t : trafficLightArrayList) {
+                                            if (t.getLocation() == v.getLocation()) {
+                                                if ( t.getColour() == 0) { // 0 is red
+                                                    if(t.getTrafficLightNumber() == 1 || t.getTrafficLightNumber() == 2 || t.getTrafficLightNumber() == 3){
+                                                        if (v.getLocation() == t.getLocation()){
+                                                            if (v.getRoadLocation() >= 5 && v.getRoadLocation() <= 10){
+                                                                if (nextRoadLocation < 9) {
+                                                                    if (v.getSpeed() > 2) {
+                                                                        v.decelerateVehicle();
+                                                                        v.moveVehicleRoadLocation();
+                                                                        accelerateVehicle = false;
+                                                                    } else {
+                                                                        v.moveVehicleRoadLocation();
+                                                                        accelerateVehicle = false;
+                                                                    }
+                                                                } else if (nextRoadLocation >= 9) {
+                                                                    v.setRoadLocation(9);
+                                                                    v.stopVehicle();
+                                                                    accelerateVehicle = false;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                                 if (accelerateVehicle) {
                                     if (r.getOrientation() == 2) {
                                         if (nextRoadLocation >= 9 && nextRoadLocation <= 10) {
                                             // random generator - choose to move piece right or left -
                                             // assign chosenDirection
-                                            int cd = rand.nextInt(((2 - 1) + 1)) + 1;
+                                            cd = rand.nextInt(((2 - 1) + 1)) + 1;
                                             if (v.getChosenDirection() == 0) {
                                                 v.setChosenDirection(cd);
                                             }
@@ -142,38 +230,139 @@ public class Simulation extends TimerTask {
                                                 for (Vehicle v2 : vehiclesArrayList) {
                                                     if (v2.getLocation() == v.getLocation()) {
                                                         if (v2.getRoadLocation() + v.getSpeed() >= 7 && v2.getRoadLocation() <= 11 && v2.getRoadDirection() != 'd') {
-                                                            break;
-                                                            // stop vehicle
+                                                            System.out.println("TEST");
+                                                            accelerateVehicle = false;
+                                                            v.stopVehicle();
+
+                                                        } else {
+                                                            v.setRoadLocation(11);
+                                                            v.setRoadSide('l');
+                                                            v.setRoadDirection('l');
+
                                                         }
-                                                        else {
-                                                            break;
-                                                            // move vehicle to 11 , set direction to left, set road side to left
+
+
+                                                    }
+                                                }
+                                            } else if (v.getChosenDirection() == 2) {
+                                                // code for vehicle moving right - check 1 lane
+                                                for (Vehicle v2 : vehiclesArrayList) {
+                                                    if (v2.getLocation() == v.getLocation()) {
+                                                        if (v2.getRoadLocation() + v.getSpeed() >= 7 && v2.getRoadLocation() <= 11 && v2.getRoadDirection() == 'R') {
+                                                            accelerateVehicle = false;
+                                                            v.stopVehicle();
+
+                                                        } else {
+                                                            v.setRoadLocation(11);
+                                                            v.setRoadSide('r');
+                                                            v.setRoadDirection('r');
+
                                                         }
 
 
                                                     }
                                                 }
                                             }
-                                        }else if (nextRoadLocation >= 5 && nextRoadLocation < 9) {
+                                        } else if (nextRoadLocation >= 5 && nextRoadLocation < 9) {
                                             // slow down vehicle
-                                            break;
+                                            v.decelerateVehicle();
+                                            v.moveVehicleRoadLocation();
+                                            accelerateVehicle = false;
                                         }
 
 
+                                    } else if (r.getOrientation() == 3) {
+                                        // code for ~|
+                                        ////////////////////////////////////////////////////////////////////////////////////
+                                        if (nextRoadLocation >= 9 && nextRoadLocation <= 10) {
+                                            // random generator - choose to move piece right or left -
+                                            // assign chosenDirection
+                                            cd = rand.nextInt(((2 - 1) + 1)) + 1;
+                                            if (v.getChosenDirection() == 0) {
+                                                v.setChosenDirection(cd);
+                                            }
+                                            if (v.getChosenDirection() == 1) {
+                                                // move car left
+                                                for (Vehicle v2 : vehiclesArrayList) {
+                                                    if (v2.getLocation() == v.getLocation()) {
+                                                        if (v2.getRoadLocation() + v.getSpeed() >= 7 && v2.getRoadLocation() <= 11 && v2.getRoadDirection() == 'u') {
+                                                            accelerateVehicle = false;
+                                                            v.stopVehicle();
+
+                                                        } else {
+                                                            v.setRoadLocation(11);
+                                                            v.setRoadSide('l');
+                                                            v.setRoadDirection('l');
+
+                                                        }
+
+
+                                                    }
+                                                }
+                                            } else if (v.getChosenDirection() == 2) {
+                                                // code for vehicle moving right - check 1 lane
+                                                break;
+                                            }
+                                        } else if (nextRoadLocation >= 5 && nextRoadLocation < 9) {
+                                            // slow down vehicle
+                                            v.decelerateVehicle();
+                                            v.moveVehicleRoadLocation();
+                                            accelerateVehicle = false;
+                                        }
+
+                                        ////////////////////////////////////////////////////////////////////////////////////
+                                    } else if (r.getOrientation() == 4) {
+                                        // code for |~
+                                        ////////////////////////////////////////////////////////////////////////////////////
+                                        if (nextRoadLocation >= 9 && nextRoadLocation <= 10) {
+                                            // random generator - choose to move piece right or left -
+                                            // assign chosenDirection
+                                            cd = rand.nextInt(((2 - 1) + 1)) + 1;
+                                            if (v.getChosenDirection() == 0) {
+                                                v.setChosenDirection(cd);
+                                            }
+                                            if (v.getChosenDirection() == 1) {
+                                                v.setRoadLocation(1);
+                                                v.setRoadSide('l');
+                                                v.setRoadDirection('R');
+
+                                            } else if (v.getChosenDirection() == 2) {
+                                                break;
+                                            }
+                                        } else if (nextRoadLocation >= 5 && nextRoadLocation < 9) {
+                                            // slow down vehicle
+                                            v.decelerateVehicle();
+                                            v.moveVehicleRoadLocation();
+                                            System.out.println("Speed: " + v.getSpeed());
+                                            accelerateVehicle = false;
+                                        }
+
+                                        ////////////////////////////////////////////////////////////////////////////////////
+                                    } else if (r.getOrientation() == 1) {
+                                        // code for
+                                        ////////////////////////////////////////////////////////////////////////////////////
+
+                                        if (v.getSpeed() + v.getRoadLocation() >= 9) {
+                                            setRoadLocation(10, v);
+                                            v.moveVehicleRoadLocation();
+                                            accelerateVehicle = true;
+
+                                        }
+
+
+                                        ////////////////////////////////////////////////////////////////////////////////////
                                     }
                                 }
-                            } else if (r.getOrientation() == 3) {
-                                break;
-                                // code for vehicle turning right
+
                             }
                         }
                         // traffic light code
                     }
                 }
             }
-
             if (accelerateVehicle) { // runs if nothing is causing the vehicle to decelerate
-                if (v.getLocation() <= map && v.getRoadLocation() >0){
+                System.out.println("Test 2");
+                if (v.getLocation() <= mapSize && v.getRoadLocation() > 0 && v.getRoadDirection() == 'd') {
                     if (v.getSpeed() < 5) {
                         v.setSpeed(v.getSpeed() + 1);
                         setRoadLocation(roadLength, v);
@@ -183,16 +372,17 @@ public class Simulation extends TimerTask {
                 }
 
 
-
             }
-            if (v.getLocation() <=mapSize && v.getRoadLocation() >0){
-                System.out.println(v.getType() + " " + v.getId() + " Location: " + v.getLocation() + ". Road location: " + v.getRoadLocation() + ". Speed: " + v.getSpeed() * 10);
+            if (v.getLocation() <= mapSize && v.getRoadLocation() > 0) {
+                System.out.println(v.getType() + " " + v.getId() + " Location: " + v.getLocation() + ". Road location: " + v.getRoadLocation() + ". Speed: " + v.getSpeed() * 10 + ". Road side: " + v.getRoadSide() + ". Direction: " + v.getRoadDirection());
 
             }
             accelerateVehicle = true;
         }
+
         boolean endSimulation = true;
-        for (Vehicle v : vehiclesArrayList){
+        for (
+                Vehicle v : vehiclesArrayList) {
             if (v.getRoadLocation() <= mapSize) {
                 endSimulation = false;
                 break;
@@ -200,9 +390,10 @@ public class Simulation extends TimerTask {
         }
         if (endSimulation) {
             System.out.println("No cars left on map");
-            timer.cancel();
-            timer.purge();
+            //timer.cancel();
+            //timer.purge();
         }
+        System.out.println("__________________________________________________________");
     }
 
 
@@ -283,7 +474,7 @@ public class Simulation extends TimerTask {
                     if (bottomMap == road.getLocation()) { // TOP OF MAP - repeat code for all 4 sides road.getName().equals("4-way intersection")
                         switch (road.getName()) {
                             case "Straight":
-                                if (road.getOrientation() == 1 ) {
+                                if (road.getOrientation() == 1) {
                                     checkVehicleList(roadSide, roadLocation, bottomMap, roadDirection);
                                 }
 
@@ -315,7 +506,7 @@ public class Simulation extends TimerTask {
                         if (tMap == road.getLocation()) {
                             switch (road.getName()) {
                                 case "Straight":
-                                    if (road.getOrientation() == 2 ) {
+                                    if (road.getOrientation() == 2) {
                                         checkVehicleList(roadSide, roadLocation, i, roadDirection);
                                     }
 
@@ -349,7 +540,7 @@ public class Simulation extends TimerTask {
                         if (tMap == road.getLocation()) {
                             switch (road.getName()) {
                                 case "Straight":
-                                    if (road.getOrientation() == 2 ) {
+                                    if (road.getOrientation() == 2) {
                                         checkVehicleList(roadSide, roadLocation, i, roadDirection);
                                     }
 
@@ -400,7 +591,7 @@ public class Simulation extends TimerTask {
                 vehicle.setRoadLocation(roadLocation);
                 vehicle.setRoadDirection(roadDirection);
                 System.out.println("A car enter the map at " + vehicle.getLocation() + " location");
-                enterMap=1;
+                enterMap = 1;
             }
         }
         carsOnMap++;

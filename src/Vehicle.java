@@ -100,8 +100,11 @@ public class Vehicle {
         }
     }
     void decelerateVehicle(){
-        if (speed > 1) {
+        if (speed >= 2) {
            speed--;
+        }
+        else {
+            speed =1;
         }
     }
     void stopVehicle(){

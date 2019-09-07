@@ -21,7 +21,7 @@ public class TrafficSimulator {
         int simulationSpeed = 1000; // change to get user input - set at 1 second
         String userInputMessage = "Please select from a number from the list below.\n(1) Load Map \n(2) Save Map \n(3) Create / edit map  \n(4) Run Simulation \n(5) Quite Application";
 
-        ArrayList<Road> roadArrayList;
+        ArrayList<Road> roadArrayList = new ArrayList<>();
         ArrayList<Vehicle> vehiclesArrayList = new ArrayList<>();
         ArrayList<TrafficLight> trafficLightArrayList = new ArrayList<>();
         createEmptyMap(mapSize, currentSize, currentMap);
@@ -30,8 +30,8 @@ public class TrafficSimulator {
         System.out.println("Welcome to the traffic simulator\n");
         Scanner scanner = new Scanner(System.in);
         // load map automatically
-        roadArrayList = loadRoad.invoke();
-        userInput = 4;//getUserInput(scanner, userInputMessage);
+        //roadArrayList = loadRoad.invoke();
+        userInput = getUserInput(scanner, userInputMessage);
         while (run)
             if (userInput == (1)) {
                 System.out.println("Load Map");
@@ -56,8 +56,8 @@ public class TrafficSimulator {
                     i++;
                     count++;
                 }
-                int numberOfBus = 1;
-                int numberOfBike = 1;
+                int numberOfBus = 0;
+                int numberOfBike = 0;
                 for (int i = 0; i < numberOfBus; ) {
                     Vehicle car = new Vehicle(6, 0, 0, 'n', 0, count, 'u',"Bus",0);
                     vehiclesArrayList.add(car);
@@ -69,9 +69,15 @@ public class TrafficSimulator {
                     vehiclesArrayList.add(car);
                     i++;
                 }
-                TrafficLight trafficLight = new TrafficLight(3,0,'b',0); // add trafficLight for testing
+                TrafficLight trafficLight = new TrafficLight(3,1,'n',1, 1, "2-Way intersection",0); // add trafficLight for testing
+                TrafficLight trafficLight2 = new TrafficLight(3,0,'n',1, 2, "2-Way intersection",0);
+                TrafficLight trafficLight3 = new TrafficLight(3,1,'n',1, 3, "2-Way intersection",0);
                 trafficLightArrayList.add(trafficLight);
+                trafficLightArrayList.add(trafficLight2);
+                trafficLightArrayList.add(trafficLight3);
 
+                //Vehicle vehicle = new Vehicle(1, 3, 1, 'r', 0, count, 'd',"Car",0);
+                //vehiclesArrayList.add(vehicle);
 
                 getTopMap(map, roadArrayList, topMap, currentMapSize);
                 getBottomMap(map, roadArrayList, bottomMap, currentMapSize);
@@ -215,7 +221,7 @@ public class TrafficSimulator {
         while (selectRoad)
             if (trafficLightPosition == (1)) {
                 System.out.println("You Selected Top");
-                TrafficLight trafficLight = new TrafficLight(trafficLightLocation,1,'t',0);
+                TrafficLight trafficLight = new TrafficLight(trafficLightLocation,1,'t',0, 1, "Straight",1);
                 trafficLight.printTrafficLight();
                 trafficLightArrayList.add(trafficLight);
                 selectRoad = false;
@@ -223,7 +229,7 @@ public class TrafficSimulator {
             }
             else if (trafficLightPosition == (2) ) {
                 System.out.println("You Selected Bottom");
-                TrafficLight trafficLight = new TrafficLight(trafficLightLocation,1,'b',0);
+                TrafficLight trafficLight = new TrafficLight(trafficLightLocation,1,'b',0,1,"Straight",1 );
                 trafficLightArrayList.add(trafficLight);
                 selectRoad = false;
 
@@ -288,10 +294,23 @@ public class TrafficSimulator {
                                 selectRoad = false;
                                 break;
                             case "2-Way intersection":
+                                TrafficLight trafficLight1 = new TrafficLight(positionInput, 0, 't',0,1, "2-Way intersection",0);
+                                TrafficLight trafficLight2 = new TrafficLight(positionInput, 1, 't',0,2, "2-Way intersection",0);
+                                TrafficLight trafficLight3 = new TrafficLight(positionInput, 0, 't',0,3, "2-Way intersection",0);
+                                trafficLight1.printTrafficLight();
+                                trafficLightArrayList.add(trafficLight1);
+                                trafficLightArrayList.add(trafficLight2);
+                                trafficLightArrayList.add(trafficLight3);
+                                selectRoad = false;
+                                break;
                             case "4-Way intersection": {
-                                TrafficLight trafficLight = new TrafficLight(positionInput, 1, 't',0);
-                                trafficLight.printTrafficLight();
-                                trafficLightArrayList.add(trafficLight);
+                                TrafficLight trafficLight41 = new TrafficLight(positionInput, 1, 't',0,1, "4-Way intersection",0);
+                                TrafficLight trafficLight42 = new TrafficLight(positionInput, 1, 't',0,2, "4-Way intersection",0);
+                                TrafficLight trafficLight43 = new TrafficLight(positionInput, 1, 't',0,3, "4-Way intersection",0);
+                                trafficLight41.printTrafficLight();
+                                trafficLightArrayList.add(trafficLight41);
+                                trafficLightArrayList.add(trafficLight42);
+                                trafficLightArrayList.add(trafficLight43);
                                 selectRoad = false;
                                 break;
                             }

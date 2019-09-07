@@ -40,29 +40,7 @@ public class Simulation2 extends TimerTask {
         double mps;
         boolean accelerateVehicle = true;
         boolean exitMap = true;
-/*        if(count < 10){
-            for(TrafficLight trafficLight : trafficLightArrayList){
-                trafficLight.setColour(1);
-            }
-        }
-        else if (count < 15){
-            for(TrafficLight trafficLight : trafficLightArrayList){
-                trafficLight.setColour(2);
-            }
-        }
-        else if (count < 20){
-            for(TrafficLight trafficLight : trafficLightArrayList){
-                trafficLight.setColour(5);
-            }
-        }
-        else if (count < 25){
-            for(TrafficLight trafficLight : trafficLightArrayList){
-                trafficLight.setColour(1);
-                count = 0;
-            }
-        }
-        count++;
-*/
+
         if (cars > 0) {
             enterTopMap(roadSideR, roadLocation); // check if cars can and enter top of map
             enterBottomMap(roadSideL, roadLocation);
