@@ -30,8 +30,8 @@ public class TrafficSimulator {
         System.out.println("Welcome to the traffic simulator\n");
         Scanner scanner = new Scanner(System.in);
         // load map automatically
-        //roadArrayList = loadRoad.invoke();
-        userInput = getUserInput(scanner, userInputMessage);
+        roadArrayList = loadRoad.invoke();
+        userInput = 4;//getUserInput(scanner, userInputMessage);
         while (run)
             if (userInput == (1)) {
                 System.out.println("Load Map");
