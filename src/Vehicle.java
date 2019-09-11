@@ -5,12 +5,12 @@ public class Vehicle {
     private char roadDirection;
     private char roadSide;
     private int speed;
-    private String type;
+    private String name;
     private int id;
     private int chosenDirection;
 
-    String getType() {
-        return type;
+    String getName() {
+        return name;
     }
 
 
@@ -37,7 +37,7 @@ public class Vehicle {
     }
 
     public Vehicle() {
-        type = "Car";
+        name = "Car";
         length = 1;
         location = 0;
         roadLocation = 0;
@@ -47,7 +47,7 @@ public class Vehicle {
     }
 
 
-    public Vehicle(int length, int location, double roadLocation, char roadSide, int speed, int id, char roadDirection, String type, int chosenDirection) {
+    public Vehicle(int length, int location, double roadLocation, char roadSide, int speed, int id, char roadDirection, String name, int chosenDirection) {
         this.length = length;
         this.location = location;
         this.roadLocation = roadLocation;
@@ -55,7 +55,7 @@ public class Vehicle {
         this.speed = speed;
         this.id = id;
         this.roadDirection = roadDirection;
-        this.type = type;
+        this.name = name;
         this.chosenDirection = chosenDirection;
     }
 
@@ -100,7 +100,10 @@ public class Vehicle {
         }
     }
     void decelerateVehicle(){
-        if (speed >= 2) {
+        if (speed == 5){
+            speed-= 2;
+        }
+        else if (speed >= 2) {
            speed--;
         }
         else {
@@ -111,6 +114,6 @@ public class Vehicle {
         speed = 0;
     }
     void moveVehicleRoadLocation(){
-        roadLocation = roadLocation + speed;
+        roadLocation += speed;
     }
 }

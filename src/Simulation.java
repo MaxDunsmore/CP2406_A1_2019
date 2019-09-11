@@ -2,7 +2,7 @@ import java.util.*;
 
 public class Simulation extends TimerTask {
 
-    private final int cars;
+    private final int vehicles;
     private final int map;
     private final ArrayList<Road> roadArrayList;
     private final ArrayList<Vehicle> vehiclesArrayList;
@@ -14,11 +14,10 @@ public class Simulation extends TimerTask {
     private int[] leftMap;
     private int[] rightMap;
     private boolean accelerateVehicle = true;
-    private int count = 1;
     private Timer timer;
 
-    Simulation(int cars, ArrayList<Road> roadArrayList, ArrayList<TrafficLight> trafficLightArrayList, int[] topMap, int[] bottomMap, int[] leftMap, int[] rightMap, ArrayList<Vehicle> vehiclesArrayList, int map, Timer timer) {
-        this.cars = cars;
+    Simulation(int vehicles, ArrayList<Road> roadArrayList, ArrayList<TrafficLight> trafficLightArrayList, int[] topMap, int[] bottomMap, int[] leftMap, int[] rightMap, ArrayList<Vehicle> vehiclesArrayList, int map, Timer timer) {
+        this.vehicles = vehicles;
         this.roadArrayList = roadArrayList;
         this.trafficLightArrayList = trafficLightArrayList;
         this.topMap = topMap;
@@ -27,6 +26,7 @@ public class Simulation extends TimerTask {
         this.rightMap = rightMap;
         this.vehiclesArrayList = vehiclesArrayList;
         this.map = map;
+        this.timer = timer;
     }
 
     @Override
@@ -46,83 +46,17 @@ public class Simulation extends TimerTask {
         boolean moveVehicle = true;
         Random rand = new Random();
 
-/*        String trafficLightColour = "red";
-        int trafficLight;
-        int trafficLight2Way = rand.nextInt(((100 - 1) + 1)) + 1;
+        changeTrafficLightColour(rand);
+        ////////
+        //traffic lights - if intersection run new code - group lights by location
 
-
-        for (TrafficLight t : trafficLightArrayList) {
-            trafficLight = rand.nextInt(((100 - 1) + 1)) + 1;
-            // if Straight run below code
-            if (t.getRoadType().equals("Straight")) {
-                if (t.getChangedColourTimer() == 0) {
-                    if (trafficLight > 50) {
-                        t.changeColour();
-                        if (t.getColour() == 1) {
-                            trafficLightColour = "green";
-                        } else if (t.getColour() == 0) {
-                            trafficLightColour = "red";
-                        }
-                        System.out.println("Traffic light at " + t.getLocation() + " turned " + trafficLightColour);
-                        t.colourTimer();
-                    }
-                } else {
-                    t.colourTimer();
-                }
-            } else if (t.getRoadType().equals("2-Way intersection")) {
-                if (t.getChangedColourTimer() == 0) {
-                    if (trafficLight2Way > 50) {
-                        t.setLightCycle2Way();
-                        if (t.getLightCycle() == 1) {
-                            if (t.getTrafficLightNumber() == 1) {
-                                t.setGreen();
-                            } else if (t.getTrafficLightNumber() == 2) {
-                                t.setRed();
-                            } else if (t.getTrafficLightNumber() == 3) {
-                                t.setRed();
-                            }
-                        } else if (t.getLightCycle() == 2) {
-                            if (t.getTrafficLightNumber() == 1) {
-                                t.setRed();
-                            } else if (t.getTrafficLightNumber() == 2) {
-                                t.setGreen();
-                            } else if (t.getTrafficLightNumber() == 3) {
-                                t.setRed();
-                            }
-                        } else if (t.getLightCycle() == 3) {
-                            // code for changing 3 to 1 (0) light cycle
-                            if (t.getTrafficLightNumber() == 1) {
-                                t.setGreen();
-                            } else if (t.getTrafficLightNumber() == 2) {
-                                t.setRed();
-                            } else if (t.getTrafficLightNumber() == 3) {
-                                t.setGreen();
-                            }
-                        }
-
-
-                        if (t.getColour() == 1) {
-                            trafficLightColour = "green";
-                        } else if (t.getColour() == 0) {
-                            trafficLightColour = "red";
-                        }
-                        System.out.println("Traffic light at " + t.getLocation() + " turned " + trafficLightColour);
-                        t.colourTimer();
-                    }
-                }
-                t.colourTimer();
-            }
-        }
-*/        ////////
-        // traffic lights - if intersection run new code - group lights by location
-
-        if (cars > 0) { // check if cars can enter each side of the map
+        if (vehicles > 0) { // check if cars can enter each side of the map
             enterTopMap(roadSideR, roadLocation);
             enterBottomMap(roadSideL, roadLocation);
             enterLeftMap(roadSideL, roadLocation);
             enterRightMap(roadSideR, roadLocation);
         }
-        if (count >= 12) {
+/*        if (count >= 12) {
             for (TrafficLight trafficLight1 : trafficLightArrayList) {
                 trafficLight1.setGreen();
             }
@@ -132,14 +66,14 @@ public class Simulation extends TimerTask {
             }
         }
         count++;
-
+*/
         for (Vehicle v : vehiclesArrayList) {
-            if (v.getLocation() > 0 && v.getLocation() <= map) {
+            if (v.getLocation() > 0 && v.getLocation() <= mapSize) {
                 double nextRoadLocation = v.getRoadLocation() + v.getSpeed();
                 if (v.getRoadDirection() == down) { // once down is complete, add code for vehicles moving different directions
-                    label:
                     for (Road r : roadArrayList) {
                         if (r.getLocation() == v.getLocation()) {
+                            System.out.println(r.getName());
                             switch (r.getName()) {
                                 case "Straight":
                                     if (r.getOrientation() == 1) {
@@ -155,7 +89,7 @@ public class Simulation extends TimerTask {
                                                             decelerateTrafficLight(v, nextRoadLocation, 15, 20, 19);
 
                                                         } else if (t.getRoadLocation() == 't' && t.getColour() > 1) {
-                                                            stopStraightTrafficLight(roadLength, v, t);
+                                                            stopVehicleStraightTrafficLight(roadLength, v, t);
                                                         }
                                                     }
                                                 }
@@ -249,7 +183,7 @@ public class Simulation extends TimerTask {
                                                     v.setRoadSide('l');
                                                     v.setRoadDirection('r');
                                                 } else if (v.getChosenDirection() == 2) {
-                                                    break label;
+                                                    break;
                                                 }
                                             } else if (nextRoadLocation >= 5 && nextRoadLocation < 9) {
                                                 v.decelerateVehicle();
@@ -259,7 +193,7 @@ public class Simulation extends TimerTask {
                                             }
                                         } else if (r.getOrientation() == 1) {
                                             if (v.getSpeed() + v.getRoadLocation() >= 9) {
-                                                setRoadLocation(10, v);
+                                                setRoadLocation(10, v,map);
                                                 v.moveVehicleRoadLocation();
                                                 accelerateVehicle = true;
                                             }
@@ -287,15 +221,22 @@ public class Simulation extends TimerTask {
                                     }
                                     if (accelerateVehicle) {
                                         // 4 way intersection movement code
-                                        if (nextRoadLocation > 9 && nextRoadLocation < 11 ) {
+                                        // if(nextRoadLocation > 5 && nextRoadLocation < 10){slow down vehicle}
+                                        if (nextRoadLocation > 5 && nextRoadLocation < 9){
+                                            v.decelerateVehicle();
+                                            v.moveVehicleRoadLocation();
+                                            accelerateVehicle = false;
+                                        }
+                                        else if (nextRoadLocation >= 9 && nextRoadLocation <= 11)// add code above to slow down vehicle - think it is skipping it ( goes from 6 to 11) - make this code else if
+                                        {
                                             getDirection(min, max4Way, rand, v);
                                             v.setRoadLocation(10);
-                                            if (nextRoadLocation == 10 && v.getSpeed() != 0) {
+                                            if (nextRoadLocation <= 10 && v.getSpeed() != 0) {
                                                 v.setRoadLocation(10);
                                                 v.setSpeed(0);
                                                 accelerateVehicle = false;
                                                 moveVehicle = false;
-                                            } else if(v.getRoadLocation() == 10 ) {
+                                            } else if (v.getRoadLocation() >= 10) {
                                                 if (v.getChosenDirection() == 1) {
                                                     for (Vehicle v3 : vehiclesArrayList) {
                                                         if (v3.getRoadLocation() == 10 || v3.getRoadLocation() == 11 && v.getRoadDirection() == right) {
@@ -351,33 +292,69 @@ public class Simulation extends TimerTask {
                                         }
 
                                     }
+                            }
+                        }
+                    }
+                } else if ((v.getRoadDirection() == left)) {
+                    for (Road r : roadArrayList) {
+                        if (r.getLocation() == v.getLocation()) {
+                            switch (r.getName()) {
+                                case "Straight":
+                                    if (r.getOrientation() == 2) {
+                                        // check if car is in front
+                                        for (Vehicle v2 : vehiclesArrayList) {
+                                            if (v.getRoadLocation() < v2.getRoadLocation() && v.getRoadSide() == v2.getRoadSide() && v.getLocation() == v2.getLocation()) {
+                                                checkVehicleInFront(v, nextRoadLocation, r, v2);
+                                            } else {
+                                                // else no cars in front, check for traffic lights
+                                                for (TrafficLight t : trafficLightArrayList) {
+                                                    if (t.getLocation() == v.getLocation()) {
+                                                        if (t.getRoadLocation() == 'b' && t.getColour() > 1) {
+                                                            decelerateTrafficLight(v, nextRoadLocation, 15, 20, 19);
 
-                                    break;
-                                default:
-                                    throw new IllegalStateException("Unexpected value: " + r.getName());
+                                                        } else if (t.getRoadLocation() == 't' && t.getColour() > 1) {
+                                                            stopVehicleStraightTrafficLight(roadLength, v, t);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                case "2-Way intersection":
+
+                                    // ADD 2 WAY CODE HERE
+                                break;
                             }
                         }
                     }
                 }
             }
             if (accelerateVehicle) { // runs if nothing is causing the vehicle to decelerate
-                if (v.getLocation() <= mapSize && v.getRoadLocation() > 0 && v.getRoadDirection() == down) {
+                if (v.getLocation() <= mapSize && v.getRoadLocation() > 0) {
                     if (v.getSpeed() < 5) {
                         v.setSpeed(v.getSpeed() + 1);
                     }
-                    setRoadLocation(roadLength, v);
+                    if (v.getRoadDirection() == down){
+                        setRoadLocation(roadLength, v, 4);
+                    }
+                    else if (v.getRoadDirection() == left){
+                        setRoadLocation(roadLength, v, -1);
+                    }
+                    else if (v.getRoadDirection() == right){
+                        setRoadLocation(roadLength, v, +1);
+                    }
+                    else if (v.getRoadDirection() == up){
+                        setRoadLocation(roadLength, v, -4);
+                    }
                 }
             }
             if (v.getLocation() <= mapSize && v.getRoadLocation() > 0) {
-                System.out.println(v.getType() + " " + v.getId() + " Location: " + v.getLocation() + ". Road location: " + v.getRoadLocation() + ". Speed: " + v.getSpeed() * 10 + ". Road side: " + v.getRoadSide() + ". Direction: " + v.getRoadDirection());
-
+                System.out.println(v.getName() + " " + v.getId() + " Location: " + v.getLocation() + ". Road location: " + v.getRoadLocation() + ". Speed: " + v.getSpeed() * 10 + ". Road side: " + v.getRoadSide() + ". Direction: " + v.getRoadDirection());
             }
             accelerateVehicle = true;
         }
-
         boolean endSimulation = true;
-        for (
-                Vehicle v : vehiclesArrayList) {
+        for ( Vehicle v : vehiclesArrayList) {
             if (v.getRoadLocation() <= mapSize) {
                 endSimulation = false;
                 break;
@@ -391,7 +368,157 @@ public class Simulation extends TimerTask {
         System.out.println("__________________________________________________________");
     }
 
-    private void stopStraightTrafficLight(int roadLength, Vehicle v, TrafficLight t) {
+    private void changeTrafficLightColour(Random rand) {
+        String trafficLightColour = "red";
+        int trafficLight;
+        int trafficLight2Way = rand.nextInt(((100 - 1) + 1)) + 1;
+        int trafficLight4Way = rand.nextInt(((100 - 1) + 1)) + 1;
+
+
+        for (TrafficLight t : trafficLightArrayList) {
+            trafficLight = rand.nextInt(((100 - 1) + 1)) + 1;
+            // if Straight run below code
+            switch (t.getRoadName()) {
+                case "Straight":
+                    if (t.getChangedColourTimer() == 0) {
+                        if (trafficLight > 50) {
+                            t.changeColour();
+                            if (t.getColour() == 1) {
+                                trafficLightColour = "green";
+                            } else if (t.getColour() == 0) {
+                                trafficLightColour = "red";
+                            }
+                            System.out.println("Traffic light at " + t.getLocation() + " turned " + trafficLightColour);
+                            t.colourTimer();
+                        }
+                    } else {
+                        t.colourTimer();
+                    }
+                    break;
+                case "2-Way intersection":
+                    if (t.getChangedColourTimer() == 0) {
+                        if (trafficLight2Way > 50) {
+                            t.setLightCycle2Way();
+                            if (t.getLightCycle() == 1) {
+                                if (t.getTrafficLightNumber() == 1) {
+                                    t.setGreen();
+                                } else if (t.getTrafficLightNumber() == 2) {
+                                    t.setRed();
+                                } else if (t.getTrafficLightNumber() == 3) {
+                                    t.setRed();
+                                }
+                            } else if (t.getLightCycle() == 2) {
+                                if (t.getTrafficLightNumber() == 1) {
+                                    t.setRed();
+                                } else if (t.getTrafficLightNumber() == 2) {
+                                    t.setGreen();
+                                } else if (t.getTrafficLightNumber() == 3) {
+                                    t.setRed();
+                                }
+                            } else if (t.getLightCycle() == 3) {
+                                // code for changing 3 to 1 (0) light cycle
+                                if (t.getTrafficLightNumber() == 1) {
+                                    t.setGreen();
+                                } else if (t.getTrafficLightNumber() == 2) {
+                                    t.setRed();
+                                } else if (t.getTrafficLightNumber() == 3) {
+                                    t.setGreen();
+                                }
+                            }
+
+
+                            if (t.getColour() == 1) {
+                                trafficLightColour = "green";
+                            } else if (t.getColour() == 0) {
+                                trafficLightColour = "red";
+                            }
+                            System.out.println("Traffic light at " + t.getLocation() + " turned " + trafficLightColour);
+                            t.colourTimer();
+                        }
+                    }
+                    t.colourTimer();
+                    break;
+                case "4-Way intersection":
+                    if (t.getChangedColourTimer() == 0) {
+                        if (trafficLight4Way > 50) {
+                            t.setLightCycle4Way();
+                            if (t.getLightCycle() == 1) {
+                                if (t.getTrafficLightNumber() == 3) {
+                                    t.setGreen();
+                                } else if (t.getTrafficLightNumber() == 1) {
+                                    t.setGreen();
+                                } else if (t.getTrafficLightNumber() == 2) {
+                                    t.setRed();
+                                } else if (t.getTrafficLightNumber() == 4) {
+                                    t.setRed();
+                                }
+                            } else if (t.getLightCycle() == 2) {
+                                if (t.getTrafficLightNumber() == 3) {
+                                    t.setGreen();
+                                } else if (t.getTrafficLightNumber() == 1) {
+                                    t.setRed();
+                                } else if (t.getTrafficLightNumber() == 2) {
+                                    t.setRed();
+                                } else if (t.getTrafficLightNumber() == 4) {
+                                    t.setRed();
+                                }
+                            } else if (t.getLightCycle() == 3) {
+                                if (t.getTrafficLightNumber() == 3) {
+                                    t.setRed();
+                                } else if (t.getTrafficLightNumber() == 1) {
+                                    t.setGreen();
+                                } else if (t.getTrafficLightNumber() == 2) {
+                                    t.setRed();
+                                } else if (t.getTrafficLightNumber() == 4) {
+                                    t.setRed();
+                                }
+                            } else if (t.getLightCycle() == 4) {
+                                if (t.getTrafficLightNumber() == 3) {
+                                    t.setRed();
+                                } else if (t.getTrafficLightNumber() == 1) {
+                                    t.setRed();
+                                } else if (t.getTrafficLightNumber() == 2) {
+                                    t.setGreen();
+                                } else if (t.getTrafficLightNumber() == 4) {
+                                    t.setGreen();
+                                }
+                            } else if (t.getLightCycle() == 5) {
+                                if (t.getTrafficLightNumber() == 3) {
+                                    t.setRed();
+                                } else if (t.getTrafficLightNumber() == 1) {
+                                    t.setRed();
+                                } else if (t.getTrafficLightNumber() == 2) {
+                                    t.setRed();
+                                } else if (t.getTrafficLightNumber() == 4) {
+                                    t.setGreen();
+                                }
+                            } else if (t.getLightCycle() == 6) {
+                                if (t.getTrafficLightNumber() == 3) {
+                                    t.setRed();
+                                } else if (t.getTrafficLightNumber() == 1) {
+                                    t.setRed();
+                                } else if (t.getTrafficLightNumber() == 2) {
+                                    t.setGreen();
+                                } else if (t.getTrafficLightNumber() == 4) {
+                                    t.setRed();
+                                }
+                            }
+                            if (t.getColour() == 1) {
+                                trafficLightColour = "green";
+                            } else if (t.getColour() == 0) {
+                                trafficLightColour = "red";
+                            }
+                            System.out.println("Traffic light at " + t.getLocation() + " turned " + trafficLightColour);
+                            t.colourTimer();
+                        }
+                    }
+                    t.colourTimer();
+                    break;
+            }
+        }
+    }
+
+    private void stopVehicleStraightTrafficLight(int roadLength, Vehicle v, TrafficLight t) {
         if (t.getRoadLocation() + map == v.getLocation()) {
             if (roadLength - v.getRoadLocation() + v.getSpeed() <= 2) {
                 if (t.getColour() >= 1) {
@@ -436,7 +563,7 @@ public class Simulation extends TimerTask {
     private void checkVehicleInFront(Vehicle v, double nextRoadLocation, Road r, Vehicle v2) {
         if (v2.getRoadLocation() - v2.getLength() - nextRoadLocation <= 1) {
             v.setSpeed(0);
-            System.out.println(v.getType() + " " + v.getId() + " has stopped due to a car in front " + r.getName() + " at Road Location " + v.getRoadLocation() + " , map Location " + v.getLocation());
+            System.out.println(v.getName() + " " + v.getId() + " has stopped due to a car in front " + r.getName() + " at Road Location " + v.getRoadLocation() + " , map Location " + v.getLocation());
             accelerateVehicle = false;
         } else if (v2.getRoadLocation() - v2.getLength() - nextRoadLocation <= 4) {
             if (v.getId() != v2.getId() && v.getLocation() == v2.getLocation()) {
@@ -449,21 +576,21 @@ public class Simulation extends TimerTask {
         }
     }
 
-    private void setRoadLocation(int roadLength, Vehicle v) {
+    private void setRoadLocation(int roadLength, Vehicle v, int nextLocation) {
         boolean exitMap = true;
         double nextRoadLocation = v.getRoadLocation() + v.getSpeed();
         if (nextRoadLocation < roadLength) {
             v.setRoadLocation(nextRoadLocation);
         } else if (nextRoadLocation >= roadLength) {
             for (Road r2 : roadArrayList) {
-                if (r2.getLocation() == v.getLocation() + map) {
-                    v.setLocation(v.getLocation() + map);// for loop check for road pieces at new place, if none and code to turn around
+                if (r2.getLocation() == v.getLocation() + nextLocation) {// place nextLocation over map
+                    v.setLocation(v.getLocation() + nextLocation);// for loop check for road pieces at new place, if none and code to turn around
                     v.setRoadLocation(nextRoadLocation - roadLength); // set based on mps+ roadLocation - roadLength
                     exitMap = false;
                 }
             }
             if (exitMap) {
-                System.out.println(v.getType() + " " + v.getId() + " left the map (road finished)");
+                System.out.println(v.getName() + " " + v.getId() + " left the map (road finished)");
                 v.setLocation(100);
                 v.setRoadLocation(1000);
             }

@@ -1,18 +1,18 @@
 class TrafficLight {
     private int location;
-    private int colour;
     private char roadLocation;
+    private int colour;
     private int changedColourTimer;
     private int trafficLightNumber;
-    private String roadType;
-    private int lightCycle;
+    private String roadName;
+    private double lightCycle;
 
-    public int getLightCycle() {
+    double getLightCycle() {
         return lightCycle;
     }
 
 
-    public int getTrafficLightNumber() {
+    int getTrafficLightNumber() {
         return trafficLightNumber;
     }
 
@@ -41,11 +41,11 @@ class TrafficLight {
         }
     }
 
-    public String getRoadType() {
-        return roadType;
+    String getRoadName() {
+        return roadName;
     }
 
-    public void setLightCycle2Way(){
+    void setLightCycle2Way(){
         if (lightCycle < 3){
             lightCycle++;
         }
@@ -53,14 +53,30 @@ class TrafficLight {
             lightCycle = 0;
         }
     }
+    void setLightCycle4Way(){
+        if (lightCycle >= 1 && lightCycle < 2){
+            lightCycle = lightCycle + 0.5;
+        }
+        else if (lightCycle == 2 || lightCycle == 3){
+            lightCycle++;
+        }else if (lightCycle >= 4 && lightCycle < 5){
+            lightCycle = lightCycle + 0.5;
+        }
+        else if(lightCycle == 5 ){
+            lightCycle++;
+        }
+        else if (lightCycle == 6) {
+            lightCycle = 1;
+        }
+    }
 
-    TrafficLight(int location, int colour, char roadLocation, int changedColour, int trafficLightNumber, String roadType, int lightCycle){
+    TrafficLight(int location, int colour, char roadLocation, int changedColour, int trafficLightNumber, String roadName, int lightCycle){
         this.location = location;
         this.roadLocation = roadLocation;
         this.colour = colour;
         this.changedColourTimer = changedColour;
         this.trafficLightNumber = trafficLightNumber;
-        this.roadType = roadType;
+        this.roadName = roadName;
         this.lightCycle = lightCycle;
     }
     void printTrafficLight() {

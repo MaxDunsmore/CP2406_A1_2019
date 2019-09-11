@@ -32,7 +32,5 @@ public class Road implements Serializable {
     void printRoad() {
         System.out.println("You added a piece of road to your map");
         System.out.println("Name: " + name + "\nOrientation: " + orientation + "\nLocation: " + location);
-
-
     }
 }
