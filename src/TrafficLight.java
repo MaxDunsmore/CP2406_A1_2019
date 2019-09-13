@@ -1,11 +1,11 @@
 class TrafficLight {
-    private int location;
-    private char roadLocation;
-    private int colour;
-    private int changedColourTimer;
-    private int trafficLightNumber;
-    private String roadName;
-    private double lightCycle;
+    private int location; // location of traffic light on map
+    private char roadLocation; // location
+    private int colour; // sets the colour of the light - red = 0, green = 1
+    private int changedColourTimer;// checks that the light hasn't recently changed colour
+    private int trafficLightNumber; // sets what number the traffic light is if it is in a set (intersections)
+    private String roadName; // checks what type of the road the traffic light is located on
+    private double lightCycle; // checks what part of the light cycle the traffic light is on
 
     double getLightCycle() {
         return lightCycle;
@@ -32,7 +32,7 @@ class TrafficLight {
         return changedColourTimer;
     }
 
-    void colourTimer() {
+    void colourTimer() { // rotates through to 5 and when 0 lights can change colours
         if (changedColourTimer >= 0){
             changedColourTimer+=1;
         }
@@ -45,7 +45,7 @@ class TrafficLight {
         return roadName;
     }
 
-    void setLightCycle2Way(){
+    void setLightCycle2Way(){ // rotates between the 3 sets of lights for 2-way intersections
         if (lightCycle < 3){
             lightCycle++;
         }
@@ -53,7 +53,7 @@ class TrafficLight {
             lightCycle = 0;
         }
     }
-    void setLightCycle4Way(){
+    void setLightCycle4Way(){ // rotates between the 6 sets of lights for 4-way intersections, (on for double the time at certain points)
         if (lightCycle >= 1 && lightCycle < 2){
             lightCycle = lightCycle + 0.5;
         }
@@ -82,7 +82,7 @@ class TrafficLight {
     void printTrafficLight() {
         System.out.println("You added a traffic light to location " + location );
     }
-    void changeColour(){
+    void changeColour(){ // changes the colour of the traffic light
         if (colour == 0){
             colour = 1;
         }

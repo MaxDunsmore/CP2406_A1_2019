@@ -1,13 +1,13 @@
 public class Vehicle {
-    private int length;
-    private int location;
-    private double roadLocation;
-    private char roadDirection;
-    private char roadSide;
-    private int speed;
-    private String name;
-    private int id;
-    private int chosenDirection;
+    private int length;// length of the vehicle
+    private int location;// location of the vehicle on the map
+    private double roadLocation; //
+    private char roadDirection;// used to control which way a vehicle is moving and what side of the road it is on
+    private char roadSide;// remove - un needed due to road direction
+    private int speed; // current speed of the vehicle
+    private String name; // name of the vehicle (e.g. car, bus, bike)
+    private int id; // use to select singular vehicles for adding them to the map
+    private int chosenDirection; // used when at a intersection to decide what way the vehicle is going
 
     String getName() {
         return name;
@@ -94,12 +94,12 @@ public class Vehicle {
     void setRoadDirection(char roadDirection) {
         this.roadDirection = roadDirection;
     }
-    void accelerateVehicle(){
+    void accelerateVehicle(){ // increases vehicle up to 5 (max speed limit for city)
         if (speed < 5) {
             speed++;
         }
     }
-    void decelerateVehicle(){
+    void decelerateVehicle(){ // decreases vehicle speed down to 1
         if (speed == 5){
             speed-= 2;
         }
@@ -110,10 +110,10 @@ public class Vehicle {
             speed =1;
         }
     }
-    void stopVehicle(){
+    void stopVehicle(){ // sets vehicle speed to 0 (stops movement)
         speed = 0;
     }
-    void moveVehicleRoadLocation(){
+    void moveVehicleRoadLocation(){ // sets the vehicles next location based of speed
         roadLocation += speed;
     }
 }

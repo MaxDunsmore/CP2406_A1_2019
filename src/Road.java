@@ -1,9 +1,9 @@
 import java.io.Serializable;
 
 public class Road implements Serializable {
-    private String name;
-    private int orientation;
-    private int location;
+    private String name; // name of the piece of road (e.g. straight, 3/4way - intersections
+    private int orientation; // what way the road piece is facing
+    private int location; // location of road on map
 
     String getName() {
         return name;
@@ -29,7 +29,7 @@ public class Road implements Serializable {
         this.location = location;
     }
 
-    void printRoad() {
+    void printRoad() { // displays road once piece is added to map (roadList)
         System.out.println("You added a piece of road to your map");
         System.out.println("Name: " + name + "\nOrientation: " + orientation + "\nLocation: " + location);
     }
