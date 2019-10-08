@@ -47,15 +47,13 @@ public class Simulation extends TimerTask {
         Random rand = new Random();
 
         changeTrafficLightColour(rand);
-        ////////
-        //traffic lights - if intersection run new code - group lights by location
-
         if (vehicles > 0) { // check if cars can enter each side of the map
             enterTopMap(roadSideR, roadLocation);
             enterBottomMap(roadSideL, roadLocation);
             enterLeftMap(roadSideL, roadLocation);
             enterRightMap(roadSideR, roadLocation);
         }
+        // used for testing traffic lights
 /*        if (count >= 12) {
             for (TrafficLight trafficLight1 : trafficLightArrayList) {
                 trafficLight1.setGreen();
