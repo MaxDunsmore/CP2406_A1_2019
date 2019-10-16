@@ -271,7 +271,7 @@ public class TrafficSimulator {
                 roadOrientation = getOrientationStraightRoad(scanner);
 
                 int positionInput = getPositionRoad(scanner, mapSize, currentMap, roadArrayList, map);
-                Road road = new Road(roadName, roadOrientation, positionInput);
+                Road road = new Road(roadName, roadOrientation, positionInput,mapSize);
                 road.printRoad();
                 roadArrayList.add(road);
                 selectRoad = false;
@@ -281,7 +281,7 @@ public class TrafficSimulator {
                 System.out.println("You Selected 4 - way intersection");
                 roadOrientation = 1;
                 int positionInput = getPositionRoad(scanner, mapSize, currentMap, roadArrayList, map);
-                Road road = new Road(roadName, roadOrientation, positionInput);
+                Road road = new Road(roadName, roadOrientation, positionInput,mapSize);
                 road.printRoad();
                 roadArrayList.add(road);
                 selectRoad = false;
@@ -291,7 +291,7 @@ public class TrafficSimulator {
                 System.out.println("You Selected 2 - way intersection");
                 roadOrientation = getOrientation2WayRoad(scanner);
                 int positionInput = getPositionRoad(scanner, mapSize, currentMap, roadArrayList, map);
-                Road road = new Road(roadName, roadOrientation, positionInput);
+                Road road = new Road(roadName, roadOrientation, positionInput,mapSize);
                 road.printRoad();
                 roadArrayList.add(road);
                 selectRoad = false;
