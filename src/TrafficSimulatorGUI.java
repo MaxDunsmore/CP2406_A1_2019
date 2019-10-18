@@ -1,15 +1,19 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 import static javax.swing.JOptionPane.showInputDialog;
 
+// fix images to fill full screen - code pixel locations based on
+
 public class TrafficSimulatorGUI extends JFrame implements ActionListener {
-    int map=0; // change to get user input between 1 - 10 for map size
+    int map = 0; // change to get user input between 1 - 10 for map size
     int mapSize; // gets the size of the map
     int currentSize = 0;
     int numberOfCars = 2;  // number of Cars
@@ -45,9 +49,14 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
     private ImageIcon iconThreeWayThree = createImageIcon("images/threeWayThreeAdd.png");
     private ImageIcon iconThreeWayFour = createImageIcon("images/threeWayFourAdd.png");
 
+    private ImageIcon car;
+    private JLabel carLabel;
+
     private JRadioButton oneWayRoadButton = new JRadioButton("One Way Road", true);
     private JRadioButton threeWayRoadButton = new JRadioButton("Three Way Road");
     private JRadioButton fourWayRoadButton = new JRadioButton("Four Way Road");
+    private boolean carDraw = false;
+    private Image carImage;
 
     private ImageIcon createImageIcon(String path) {
         java.net.URL imgURL = getClass().getResource(path);
@@ -59,7 +68,7 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
         }
     }
 
-    private JPanel gridEastButtons = new JPanel(new GridLayout(4, 1));// change to map size
+    private JPanel gridEastButtons = new JPanel(new GridLayout(4, 1,4,4));// change to map size
     private JLabel oneWayIcon = new JLabel();
     private JLabel threeWayIcon = new JLabel();
     private JLabel fourWayIcon = new JLabel();
@@ -68,8 +77,16 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
     private ButtonGroup mapButtons = new ButtonGroup();
     private JPanel grid;
     String name;
+    int xPoints[] = {10,11,12,10};
+    int yPoints[] = {10,11,12,10};
+    String imgPath = "images/car.png";
+    final BufferedImage image = ImageIO.read(getClass().getResourceAsStream(imgPath));
 
-    private TrafficSimulatorGUI() {
+
+
+
+
+    private TrafficSimulatorGUI() throws IOException {
 
         setTitle("Traffic Simulator");
         Font font = new Font("Arial", Font.BOLD, 14);
@@ -94,6 +111,7 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
         menuOpen.addActionListener(this);
         menuEdit.addActionListener(this);
         menuExit.addActionListener(this);
+        menuRun.addActionListener(this);
 
         //... Create a button group and add the buttons.
         mapButtons.add(oneWayRoadButton);
@@ -116,9 +134,19 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
         gridEastButtons.add(doneButton);
         rotateButton.addActionListener(this);
         gridEastButtons.setVisible(false);
+
     }
 
-    public static void main(String[] args) {
+
+    private void printCar() {
+        car = new ImageIcon(getClass().getResource("/images/car.png"));
+        carLabel = new JLabel(car);
+        add(carLabel,BorderLayout.CENTER);
+       // carLabel.setLocation(10,10);
+        //carLabel.setBounds(10,10,10,10);
+    }
+
+    public static void main(String[] args) throws IOException {
         TrafficSimulatorGUI frame = new TrafficSimulatorGUI();
         final int WIDTH = 1500;
         final int HEIGHT = 900;
@@ -126,12 +154,20 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
         frame.setVisible(true);
         new TrafficSimulatorGUI();
     }
+    @Override
+    public void paint(Graphics g){
+        super.paint(g);
+        if (carDraw){
+            g.drawImage(image,0,0,null);
+
+        }
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
         if (source == menuNew) {
-            if(map > 0){
+            if (map > 0) {
                 grid.removeAll();
             }
             gridEastButtons.setVisible(true);
@@ -146,13 +182,14 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
             MapPieces[] button = new MapPieces[mapSize];
             grid.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
             for (int i = 0; i < (mapSize); i++) {
-                button[i] = new MapPieces(oneWayRoadButton, threeWayRoadButton, fourWayRoadButton, oneWayIcon, threeWayIcon, fourWayIcon, position, roadArrayList,map);
+                button[i] = new MapPieces(oneWayRoadButton, threeWayRoadButton, fourWayRoadButton, oneWayIcon, threeWayIcon, fourWayIcon, position, roadArrayList, map);
                 button[i].setBorder(BorderFactory.createLineBorder(Color.BLACK));
                 grid.add(button[i]);
                 position++;
             }
             add(grid, BorderLayout.CENTER);
-            grid.setBackground(Color.green);
+            validate();
+            //setLayout(null);
             validate();
         }
         if (source == rotateButton) {
@@ -182,7 +219,7 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
         }
         if (source == menuSave) {
             try {
-                saveRoad(mapSize, roadArrayList);
+                saveRoad(roadArrayList);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -194,12 +231,16 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
             System.exit(0);
         }
         if (source == menuOpen) {
-            if(map > 0){
-                grid.removeAll();
+            position = 0;
+            roadArrayList.clear();
+            if (map > 0) {
+                remove(grid);
+                 //grid.removeAll();
             }
 
             gridEastButtons.setVisible(false);
             mapButtons.clearSelection();
+
             try {
                 roadArrayList = loadRoad.invoke();
             } catch (IOException | ClassNotFoundException ex) {
@@ -207,7 +248,7 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
             }
 
 
-            for (Road road : roadArrayList){
+            for (Road road : roadArrayList) {
                 map = road.getSize();
                 break;
             }
@@ -218,21 +259,43 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
             MapPieces[] button = new MapPieces[mapSize];
             grid.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
             for (int i = 0; i < (mapSize); i++) {
-                button[i] = new MapPieces(oneWayRoadButton, threeWayRoadButton, fourWayRoadButton, oneWayIcon, threeWayIcon, fourWayIcon, position, roadArrayList,map);
+                button[i] = new MapPieces(oneWayRoadButton, threeWayRoadButton, fourWayRoadButton, oneWayIcon, threeWayIcon, fourWayIcon, position, roadArrayList, map);
                 button[i].setBorder(BorderFactory.createLineBorder(Color.BLACK));
                 grid.add(button[i]);
                 position++;
             }
             add(grid, BorderLayout.CENTER);
-            grid.setBackground(Color.green);
-            validate();
 
-// figure out how to load map onto gui - for loop to go through values and check for position to match road peace
-// Map pieces code to read map onto buttons
-            // add new txt file for map size
-            //                   1. create txt file for map size
-            //                   2. add buttons to grid based of mapSize
-            // 3. add icons from roadArrayList - MapPieces on make/load
+            validate();
+            //grid.repaint();
+        }
+        if (source == menuRun) {
+            position = 0;
+            if (map > 0) {
+                remove(grid);
+            }
+            gridEastButtons.setVisible(false);
+            mapButtons.clearSelection();
+            for (Road road : roadArrayList) {
+                map = road.getSize();
+                break;
+            }
+            mapSize = map * map;
+            // change to map size
+            grid = new JPanel(new GridLayout(map, map));
+            MapPiecesRun[] button = new MapPiecesRun[mapSize];
+            grid.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+            for (int i = 0; i < (mapSize); i++) {
+                button[i] = new MapPiecesRun(oneWayRoadButton, threeWayRoadButton, fourWayRoadButton, oneWayIcon, threeWayIcon, fourWayIcon, position, roadArrayList, map);
+                //button[i].setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                grid.add(button[i]);
+                position++;
+            }
+            add(grid, BorderLayout.CENTER);
+
+            validate();
+            carDraw = true;
+            repaint();
         }
     }
 
@@ -245,19 +308,13 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
         }
     }
 
-    private static void saveRoad(int mapSize, ArrayList<Road> roadArrayList) throws IOException { // change to be able to save as new map
+    private static void saveRoad(ArrayList<Road> roadArrayList) throws IOException { // change to be able to save as new map
         // saves map to to txt file
         String name = JOptionPane.showInputDialog("Enter a name for the map");
         FileOutputStream foutRoad = new FileOutputStream(name);
         ObjectOutputStream oosRoad = new ObjectOutputStream(foutRoad);
         oosRoad.writeObject(roadArrayList);
         foutRoad.close();
-
-        name = name + "Size";//JOptionPane.showInputDialog("Enter a name for the map");
-        FileOutputStream foutSize = new FileOutputStream(name);
-        ObjectOutputStream oosSize = new ObjectOutputStream(foutSize);
-        oosSize.writeObject(mapSize);
-        foutSize.close();
 
     }
 
