@@ -9,6 +9,5 @@ class RoadTest {
         assertEquals(road.getLocation(),10.4);
         assertEquals(road.getName(),"straight");
         assertEquals(road.getOrientation(),1);
-        road.printRoad();
     }
 }

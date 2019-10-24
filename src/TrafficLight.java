@@ -1,6 +1,8 @@
-class TrafficLight {
+import java.io.Serializable;
+
+class TrafficLight implements Serializable {
     private int location; // location of traffic light on map
-    private char roadLocation; // location
+    private int roadLocation; // location
     private int colour; // sets the colour of the light - red = 0, green = 1
     private int changedColourTimer;// checks that the light hasn't recently changed colour
     private int trafficLightNumber; // sets what number the traffic light is if it is in a set (intersections)
@@ -24,7 +26,7 @@ class TrafficLight {
         return colour;
     }
 
-    char getRoadLocation() {
+    int getRoadLocation() {
         return roadLocation;
     }
 
@@ -40,7 +42,6 @@ class TrafficLight {
             changedColourTimer = 0;
         }
     }
-
     String getRoadName() {
         return roadName;
     }
@@ -70,7 +71,7 @@ class TrafficLight {
         }
     }
 
-    TrafficLight(int location, int colour, char roadLocation, int changedColour, int trafficLightNumber, String roadName, int lightCycle){
+    TrafficLight(int location, int colour, int roadLocation, int changedColour, int trafficLightNumber, String roadName, int lightCycle){
         this.location = location;
         this.roadLocation = roadLocation;
         this.colour = colour;

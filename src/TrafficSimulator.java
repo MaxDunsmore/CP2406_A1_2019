@@ -53,19 +53,19 @@ public class TrafficSimulator {
                 //numberOfCars = getUserInput(scanner, inputMessage);
 
                 for (int i = 0; i < numberOfCars; ) {
-                    Vehicle car = new Vehicle(2, 0, 0, 'n', 0, count, 'u',"Car",0);
+                    Vehicle car = new Vehicle(2, 0,0, 0,0, 'n', 0, count, 'u',"Car",0);
                     vehiclesArrayList.add(car);
                     i++;
                     count++;
                 }
                 for (int i = 0; i < numberOfBus; ) {
-                    Vehicle car = new Vehicle(6, 0, 0, 'n', 0, count, 'u',"Bus",0);
+                    Vehicle car = new Vehicle(6, 0, 0,0,0, 'n', 0, count, 'u',"Bus",0);
                     vehiclesArrayList.add(car);
                     i++;
                 }
 
                 for (int i = 0; i < numberOfBike; ) {
-                    Vehicle car = new Vehicle(1, 0, 0, 'n', 0, count, 'u',"Bike",0);
+                    Vehicle car = new Vehicle(1, 0, 0,0,0, 'n', 0, count, 'u',"Bike",0);
                     vehiclesArrayList.add(car);
                     i++;
                 }

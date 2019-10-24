@@ -71,7 +71,6 @@ public class Simulation extends TimerTask {
                 if (v.getRoadDirection() == down) { // once down is complete, add code for vehicles moving different directions
                     for (Road r : roadArrayList) {
                         if (r.getLocation() == v.getLocation()) {
-                            System.out.println(r.getName());
                             switch (r.getName()) {
                                 case "Straight":
                                     if (r.getOrientation() == 1) {

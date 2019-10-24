@@ -4,24 +4,24 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class VehicleTest {
     @Test
-    void testVehicle(){
+    void changeSpeed(){
         Vehicle vehicle = new Vehicle();
-        vehicle.accelerateVehicle();
-        vehicle.accelerateVehicle();
-        vehicle.accelerateVehicle();
-        vehicle.accelerateVehicle();
+        vehicle.setSpeed(4);
         vehicle.accelerateVehicle();
         vehicle.accelerateVehicle();
         assertEquals(vehicle.getSpeed(), 5);
-        vehicle.moveVehicleRoadLocation();
-        assertEquals(vehicle.getRoadLocation(), 5);
         vehicle.decelerateVehicle();
         vehicle.decelerateVehicle();
         vehicle.decelerateVehicle();
         assertEquals(vehicle.getSpeed(), 2);
-        vehicle.moveVehicleRoadLocation();
-        assertEquals(vehicle.getRoadLocation(), 7);
         vehicle.stopVehicle();
         assertEquals(vehicle.getSpeed(), 0);
+    }
+    @Test
+    void moveVehicle(){
+        Vehicle vehicle = new Vehicle();
+        vehicle.setSpeed(2);
+        vehicle.moveVehicleRoadLocation();
+        assertEquals(vehicle.getRoadLocation(), 2);
     }
 }
