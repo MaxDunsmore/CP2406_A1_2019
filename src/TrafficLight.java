@@ -35,43 +35,247 @@ class TrafficLight implements Serializable {
     }
 
     void colourTimer() { // rotates through to 5 and when 0 lights can change colours
-        if (changedColourTimer >= 0){
-            changedColourTimer+=1;
+        if (changedColourTimer >= 0) {
+            changedColourTimer += 1;
         }
-        if(changedColourTimer == 5 ){
+        if (changedColourTimer == 50) {
             changedColourTimer = 0;
         }
     }
+
     String getRoadName() {
         return roadName;
     }
 
-    void setLightCycle2Way(){ // rotates between the 3 sets of lights for 2-way intersections
-        if (lightCycle < 3){
+    void setLightCycle2Way() { // rotates between the 3 sets of lights for 2-way intersections
+        if (lightCycle < 3) {
             lightCycle++;
-        }
-        else if(lightCycle <= 3){
+        } else if (lightCycle <= 3) {
             lightCycle = 0;
         }
     }
-    void setLightCycle4Way(){ // rotates between the 6 sets of lights for 4-way intersections, (on for double the time at certain points)
-        if (lightCycle >= 1 && lightCycle < 2){
+
+    void setLightCycle4Way() { // rotates between the 6 sets of lights for 4-way intersections, (on for double the time at certain points)
+        if (lightCycle >= 1 && lightCycle < 2) {
             lightCycle = lightCycle + 0.5;
-        }
-        else if (lightCycle == 2 || lightCycle == 3){
+        } else if (lightCycle == 2 || lightCycle == 3) {
             lightCycle++;
-        }else if (lightCycle >= 4 && lightCycle < 5){
+        } else if (lightCycle >= 4 && lightCycle < 5) {
             lightCycle = lightCycle + 0.5;
-        }
-        else if(lightCycle == 5 ){
+        } else if (lightCycle == 5) {
             lightCycle++;
-        }
-        else if (lightCycle == 6) {
+        } else if (lightCycle == 6) {
             lightCycle = 1;
         }
     }
 
-    TrafficLight(int location, int colour, int roadLocation, int changedColour, int trafficLightNumber, String roadName, int lightCycle){
+    void threeWayCycle() {
+        if (roadName.equals("threeWayOne")) {
+            if (lightCycle <= 20) {
+                lightCycle++;
+                if (trafficLightNumber == 2) {
+                    colour = 1; // green = 1
+                } else if (trafficLightNumber == 3) {
+                    colour = 0;
+                } else if (trafficLightNumber == 4) {
+                    colour = 0;
+                }
+            } else if (lightCycle <= 40) {
+                lightCycle++;
+                if (trafficLightNumber == 2) {
+                    colour = 0;
+                } else if (trafficLightNumber == 3) {
+                    colour = 1;
+                } else if (trafficLightNumber == 4) {
+                    colour = 1;
+                }
+
+            } else if (lightCycle <= 60) {
+                lightCycle++;
+                if (trafficLightNumber == 2) {
+                    colour = 1;
+                } else if (trafficLightNumber == 3) {
+                    colour = 0;
+                } else if (trafficLightNumber == 4) {
+                    colour = 1;
+                }
+            }else if (lightCycle <= 80) {
+                lightCycle = 0;
+            }
+        }
+        else if (roadName.equals("threeWayTwo")) {
+            if (lightCycle <= 20) {
+                lightCycle++;
+                if (trafficLightNumber == 1) {
+                    colour = 1; // green = 1
+                } else if (trafficLightNumber == 2) {
+                    colour = 0;
+                } else if (trafficLightNumber == 3) {
+                    colour = 0;
+                }
+            } else if (lightCycle <= 40) {
+                lightCycle++;
+                if (trafficLightNumber == 1) {
+                    colour = 0;
+                } else if (trafficLightNumber == 2) {
+                    colour = 1;
+                } else if (trafficLightNumber == 3) {
+                    colour = 1;
+                }
+
+            } else if (lightCycle <= 60) {
+                lightCycle++;
+                if (trafficLightNumber == 1) {
+                    colour = 1;
+                } else if (trafficLightNumber == 2) {
+                    colour = 0;
+                } else if (trafficLightNumber == 3) {
+                    colour = 1;
+                }
+            }else if (lightCycle <= 80) {
+                lightCycle = 0;
+            }
+        }
+        else if (roadName.equals("threeWayThree")) {
+            if (lightCycle <= 20) {
+                lightCycle++;
+                if (trafficLightNumber == 1) {
+                    colour = 0; // green = 1
+                } else if (trafficLightNumber == 3) {
+                    colour = 1;
+                } else if (trafficLightNumber == 4) {
+                    colour = 0;
+                }
+            } else if (lightCycle <= 40) {
+                lightCycle++;
+                if (trafficLightNumber == 1) {
+                    colour = 1;
+                } else if (trafficLightNumber == 3) {
+                    colour = 0;
+                } else if (trafficLightNumber == 4) {
+                    colour = 1;
+                }
+
+            } else if (lightCycle <= 60) {
+                lightCycle++;
+                if (trafficLightNumber == 1) {
+                    colour = 0;
+                } else if (trafficLightNumber == 3) {
+                    colour = 1;
+                } else if (trafficLightNumber == 4) {
+                    colour = 1;
+                }
+            }else if (lightCycle <= 80) {
+                lightCycle = 0;
+            }
+        }
+        else if (roadName.equals("threeWayFour")) {
+            if (lightCycle <= 20) {
+                lightCycle++;
+                if (trafficLightNumber == 1) {
+                    colour = 0; // green = 1
+                } else if (trafficLightNumber == 2) {
+                    colour = 1;
+                } else if (trafficLightNumber == 4) {
+                    colour = 0;
+                }
+            } else if (lightCycle <= 40) {
+                lightCycle++;
+                if (trafficLightNumber == 1) {
+                    colour = 1;
+                } else if (trafficLightNumber == 2) {
+                    colour = 0;
+                } else if (trafficLightNumber == 4) {
+                    colour = 1;
+                }
+
+            } else if (lightCycle <= 60) {
+                lightCycle++;
+                if (trafficLightNumber == 1) {
+                    colour = 0;
+                } else if (trafficLightNumber == 2) {
+                    colour = 1;
+                } else if (trafficLightNumber == 4) {
+                    colour = 1;
+                }
+            }else if (lightCycle <= 80) {
+                lightCycle = 0;
+            }
+        }
+    }
+
+    void fourWayCycle() {
+        if (lightCycle <= 20) {
+            lightCycle = lightCycle + 0.5;
+            if (trafficLightNumber == 3) {
+                colour = 1; // green = 1
+            } else if (trafficLightNumber == 1) {
+                colour = 1;
+            } else if (trafficLightNumber == 2) {
+                colour = 0;
+            } else if (trafficLightNumber == 4) {
+                colour = 0;
+            }
+        } else if (lightCycle <= 40) {
+            lightCycle++;
+            if (trafficLightNumber == 3) {
+                colour = 1;
+            } else if (trafficLightNumber == 1) {
+                colour = 0;
+            } else if (trafficLightNumber == 2) {
+                colour = 0;
+            } else if (trafficLightNumber == 4) {
+                colour = 0;
+            }
+
+        } else if (lightCycle <= 60) {
+            lightCycle = lightCycle + 0.5;
+            if (trafficLightNumber == 3) {
+                colour = 0;
+            } else if (trafficLightNumber == 1) {
+                colour = 1;
+            } else if (trafficLightNumber == 2) {
+                colour = 0;
+            } else if (trafficLightNumber == 4) {
+                colour = 0;
+            }
+        } else if (lightCycle <= 80) {
+            lightCycle = lightCycle + 0.5;
+            if (trafficLightNumber == 3) {
+                colour = 0;
+            } else if (trafficLightNumber == 1) {
+                colour = 0;
+            } else if (trafficLightNumber == 2) {
+                colour = 1;
+            } else if (trafficLightNumber == 4) {
+                colour = 1;
+            }
+        } else if (lightCycle <= 100) {
+            lightCycle++;
+            if (trafficLightNumber == 3) {
+                colour = 0;
+            } else if (trafficLightNumber == 1) {
+                colour = 0;
+            } else if (trafficLightNumber == 2) {
+                colour = 0;
+            } else if (trafficLightNumber == 4) {
+                colour = 1;
+            }
+        } else if (lightCycle <= 120) {
+            if (trafficLightNumber == 3) {
+                colour = 0;
+            } else if (trafficLightNumber == 1) {
+                colour = 0;
+            } else if (trafficLightNumber == 2) {
+                colour = 1;
+            } else if (trafficLightNumber == 4) {
+                colour = 0;
+            }
+            lightCycle = 0;
+        }
+    }
+
+    TrafficLight(int location, int colour, int roadLocation, int changedColour, int trafficLightNumber, String roadName, int lightCycle) {
         this.location = location;
         this.roadLocation = roadLocation;
         this.colour = colour;
@@ -80,22 +284,25 @@ class TrafficLight implements Serializable {
         this.roadName = roadName;
         this.lightCycle = lightCycle;
     }
+
     void printTrafficLight() {
-        System.out.println("You added a traffic light to location " + location );
+        System.out.println("You added a traffic light to location " + location);
     }
-    void changeColour(){ // changes the colour of the traffic light
-        if (colour == 0){
+
+    void changeColour() { // changes the colour of the traffic light
+        if (colour == 0) {
             colour = 1;
-        }
-        else if (colour == 1){
-            colour =  0;
+        } else if (colour == 1) {
+            colour = 0;
         }
     }
-    void setGreen(){
-        colour =1;
+
+    void setGreen() {
+        colour = 1;
     }
-    void setRed(){
-        colour =0;
+
+    void setRed() {
+        colour = 0;
     }
 }
 

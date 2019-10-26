@@ -216,7 +216,7 @@ public class MapPieces extends JButton implements ActionListener, ComponentListe
                 threeWayThreeDraw = false;
                 threeWayFourDraw = false;
                 fourWayDraw = false;
-                addTrafficLightFourWay(0, "threeWayOne");
+                addTrafficLightThreeWay(0, "threeWayOne");
                 repaint();
             } else if (name.equals("threeWayTwo")) {
                 oneWayDraw = false;
@@ -226,7 +226,7 @@ public class MapPieces extends JButton implements ActionListener, ComponentListe
                 threeWayThreeDraw = false;
                 threeWayFourDraw = false;
                 fourWayDraw = false;
-                addTrafficLightFourWay(0, "threeWayTwo");
+                addTrafficLightThreeWay(0, "threeWayTwo");
                 repaint();
             } else if (name.equals("threeWayThree")) {
                 oneWayDraw = false;
@@ -236,7 +236,7 @@ public class MapPieces extends JButton implements ActionListener, ComponentListe
                 threeWayThreeDraw = true;
                 threeWayFourDraw = false;
                 fourWayDraw = false;
-                addTrafficLightFourWay(0, "threeWayThree");
+                addTrafficLightThreeWay(0, "threeWayThree");
                 repaint();
             } else if (name.equals("threeWayFour")) {
                 oneWayDraw = false;
@@ -246,7 +246,7 @@ public class MapPieces extends JButton implements ActionListener, ComponentListe
                 threeWayThreeDraw = false;
                 threeWayFourDraw = true;
                 fourWayDraw = false;
-                addTrafficLightFourWay(0, "threeWayFour");
+                addTrafficLightThreeWay(0, "threeWayFour");
                 repaint();
             } else if (name.equals("fourWay")) {
                 oneWayDraw = false;
@@ -273,15 +273,28 @@ public class MapPieces extends JButton implements ActionListener, ComponentListe
         setIcon(new ImageIcon(dimg));
 
     }
-
-    private void addTrafficLightFourWay(int i, String s) {
+    private void addTrafficLightThreeWay(int i, String s) {
         TrafficLight trafficLight41 = new TrafficLight(position, i, 't', 0, 1, s, 0);
-        TrafficLight trafficLight42 = new TrafficLight(position, 1, 't', 0, 2, s, 0);
+        TrafficLight trafficLight42 = new TrafficLight(position, i, 't', 0, 2, s, 0);
         TrafficLight trafficLight43 = new TrafficLight(position, i, 't', 0, 3, s, 0);
+        TrafficLight trafficLight44 = new TrafficLight(position, i, 't', 0, 4, s, 0);
         trafficLight41.printTrafficLight();
         trafficLightArrayList.add(trafficLight41);
         trafficLightArrayList.add(trafficLight42);
         trafficLightArrayList.add(trafficLight43);
+        trafficLightArrayList.add(trafficLight44);
+    }
+
+    private void addTrafficLightFourWay(int i, String s) {
+        TrafficLight trafficLight41 = new TrafficLight(position, i, 't', 0, 1, s, 0);
+        TrafficLight trafficLight42 = new TrafficLight(position, i, 't', 0, 2, s, 0);
+        TrafficLight trafficLight43 = new TrafficLight(position, i, 't', 0, 3, s, 0);
+        TrafficLight trafficLight44 = new TrafficLight(position, i, 't', 0, 4, s, 0);
+        trafficLight41.printTrafficLight();
+        trafficLightArrayList.add(trafficLight41);
+        trafficLightArrayList.add(trafficLight42);
+        trafficLightArrayList.add(trafficLight43);
+        trafficLightArrayList.add(trafficLight44);
     }
 
     @Override

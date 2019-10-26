@@ -64,10 +64,10 @@ public class MapPiecesRun extends JLabel implements ComponentListener {
         for (TrafficLight trafficLight : trafficLightArrayList) {
             if (trafficLight.getLocation() == position) {
                 if (trafficLight.getRoadName().equals("oneWay")) {
-                    oneWayDraw = true;
+                    //oneWayDraw = true;
                     location = trafficLight.getRoadLocation();
                 } else if (trafficLight.getRoadName().equals("oneWayTwo")) {
-                    oneWayTwoDraw = true;
+                    //oneWayTwoDraw = true;
                     location = trafficLight.getRoadLocation();
                 } else if (trafficLight.getRoadName().equals("threeWayOne")) {
                     threeWayOneDraw = true;
@@ -135,8 +135,8 @@ public class MapPiecesRun extends JLabel implements ComponentListener {
                 gameHeight = (int) (Math.round(h * 0.99));
                 gameHeight = gameHeight - 54;
             }
-            g.drawImage(image, gameWidth, gameHeight, null);
-        }
+            //g.drawImage(image, gameWidth, gameHeight, null);
+        } // !!! remove code
         if (oneWayTwoDraw) {
             w = getWidth();
             h = getHeight();
@@ -152,15 +152,15 @@ public class MapPiecesRun extends JLabel implements ComponentListener {
                 gameWidth = gameWidth - 24;
             }
             g.drawImage(image, gameWidth, gameHeight, null);
-        }
+        } // !!! remove code
         if (fourWayDraw) {
             // Traffic Light 1
             w = getWidth();
             h = getHeight();
-            trafficLightOne(g);
-            trafficLightTwo(g);
-            trafficLightThree(g);
-            trafficLightFour(g);
+            //trafficLightOne(g);
+            //trafficLightTwo(g);
+            //trafficLightThree(g);
+            //trafficLightFour(g);
         }
         if (threeWayOneDraw) {
             trafficLightOne(g);
@@ -187,21 +187,21 @@ public class MapPiecesRun extends JLabel implements ComponentListener {
     private void trafficLightFour(Graphics g) {
         gameWidth = (int) (Math.round(w * 0.6));
         gameHeight = (int) (Math.round(h * 0.6));
-        g.drawImage(image, gameWidth, gameHeight, null);
+        //g.drawImage(image, gameWidth, gameHeight, null);
     }
 
     private void trafficLightThree(Graphics g) {
         gameWidth = (int) (Math.round(w * 0.4));
         gameWidth = gameWidth - 24;
         gameHeight = (int) (Math.round(h * 0.6));
-        g.drawImage(image, gameWidth, gameHeight, null);
+        //g.drawImage(image, gameWidth, gameHeight, null);
     }
 
     private void trafficLightTwo(Graphics g) {
         gameWidth = (int) (Math.round(w * 0.6));
         gameHeight = (int) (Math.round(h * 0.4));
         gameHeight = gameHeight - 54;
-        g.drawImage(image, gameWidth, gameHeight, null);
+        //g.drawImage(image, gameWidth, gameHeight, null);
     }
 
     private void trafficLightOne(Graphics g) {
@@ -211,7 +211,7 @@ public class MapPiecesRun extends JLabel implements ComponentListener {
         gameWidth = gameWidth - 24;
         gameHeight = (int) (Math.round(h * positionH));
         gameHeight = gameHeight - 54;
-        g.drawImage(image, gameWidth, gameHeight, null);
+        //g.drawImage(image, gameWidth, gameHeight, null);
     }
 
 

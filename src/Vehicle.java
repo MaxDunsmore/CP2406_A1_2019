@@ -115,12 +115,12 @@ public class Vehicle {
         this.roadDirection = roadDirection;
     }
     void accelerateVehicle(){ // increases vehicle up to 5 (max speed limit for city)
-        if (speed < 5) {
+        if (speed < 4) {
             speed++;
         }
     }
     void decelerateVehicle(){ // decreases vehicle speed down to 1
-        if (speed == 5){
+        if (speed == 4){
             speed-= 1;
         }
         else if (speed >= 2) {
