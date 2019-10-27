@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class MapPieces extends JButton implements ActionListener, ComponentListener {
     private ImageIcon oneWay, oneWayTwo, threeWayOne, threeWayTwo, threeWayThree, threeWayFour, fourWay, trafficLight;
-    private JLabel oneWayIcon, threeWayIcon, fourWayIcon, trafficLightIcon;
+    private JLabel oneWayIcon, threeWayIcon;
     private JRadioButton oneWayRoadButton;
     private JRadioButton threeWayRoadButton;
     private JRadioButton fourWayRoadButton;
@@ -19,16 +19,12 @@ public class MapPieces extends JButton implements ActionListener, ComponentListe
     private String name = "";
     private ArrayList<Road> roadArrayList;
     private ArrayList<TrafficLight> trafficLightArrayList;
-    int i = 0;
-    int newX;
-    int newY;
     private int w = getWidth();
     private int h = getHeight();
     private double positionW;
     private double positionH;
     private int gameHeight;
     private int gameWidth;
-    boolean trafficLightDraw = false;
     private boolean oneWayDraw = false;
     private boolean oneWayTwoDraw = false;
     private boolean threeWayOneDraw = false;
@@ -38,9 +34,9 @@ public class MapPieces extends JButton implements ActionListener, ComponentListe
     private boolean fourWayDraw = false;
     private boolean remove = true;
     private String imgPath = "images/trafficLight.png";
-    final BufferedImage image = ImageIO.read(getClass().getResourceAsStream(imgPath));
+    private final BufferedImage image = ImageIO.read(getClass().getResourceAsStream(imgPath));
 
-    MapPieces(JRadioButton oneWayRoadButton, JRadioButton threeWayRoadButton, JRadioButton fourWayRoadButton, JLabel oneWayIcon, JLabel threeWayIcon, JLabel fourWayIcon, int position, ArrayList<Road> roadArrayList, int map, JLabel trafficLightIcon, JRadioButton trafficLightButton, ArrayList<TrafficLight> trafficLightArrayList) throws IOException {
+    MapPieces(JRadioButton oneWayRoadButton, JRadioButton threeWayRoadButton, JRadioButton fourWayRoadButton, JLabel oneWayIcon, JLabel threeWayIcon, int position, ArrayList<Road> roadArrayList, int map, JRadioButton trafficLightButton, ArrayList<TrafficLight> trafficLightArrayList) throws IOException {
         oneWay = new ImageIcon(this.getClass().getResource("images/oneWay.png"));
         oneWayTwo = new ImageIcon(this.getClass().getResource("images/oneWayTwo.png"));
         threeWayOne = new ImageIcon(this.getClass().getResource("images/threeWayOne.png"));
@@ -58,43 +54,36 @@ public class MapPieces extends JButton implements ActionListener, ComponentListe
         this.trafficLightButton = trafficLightButton;
         this.oneWayIcon = oneWayIcon;
         this.threeWayIcon = threeWayIcon;
-        this.fourWayIcon = fourWayIcon;
         this.position = position;
         this.roadArrayList = roadArrayList;
         this.trafficLightArrayList = trafficLightArrayList;
         this.map = map;
- /*       for(Road road : roadArrayList){
-            BufferedImage img = null;
-            String iconPath = "images/" + road.getName() + ".png";
-            try {
-                img = ImageIO.read(this.getClass().getResource(iconPath));
-            } catch (IOException error) {
-                error.printStackTrace();
-            }
-            w = getWidth();
-            h = getHeight();
-            Image dimg = img.getScaledInstance(w, h, Image.SCALE_SMOOTH);
-            setIcon(new ImageIcon(dimg));
-        }
- */
         for (TrafficLight trafficLight : trafficLightArrayList) {
             if (trafficLight.getLocation() == position) {
-                if (trafficLight.getRoadName().equals("oneWay")) {
-                    oneWayDraw = true;
-                    location = trafficLight.getRoadLocation();
-                } else if (trafficLight.getRoadName().equals("oneWayTwo")) {
-                    oneWayTwoDraw = true;
-                    location = trafficLight.getRoadLocation();
-                } else if (trafficLight.getRoadName().equals("threeWayOne")) {
-                    threeWayOneDraw = true;
-                } else if (trafficLight.getRoadName().equals("threeWayTwo")) {
-                    threeWayTwoDraw = true;
-                } else if (trafficLight.getRoadName().equals("threeWayThree")) {
-                    threeWayThreeDraw = true;
-                } else if (trafficLight.getRoadName().equals("threeWayFour")) {
-                    threeWayFourDraw = true;
-                } else if (trafficLight.getRoadName().equals("fourWay")) {
-                    fourWayDraw = true;
+                switch (trafficLight.getRoadName()) {
+                    case "oneWay":
+                        oneWayDraw = true;
+                        location = trafficLight.getRoadLocation();
+                        break;
+                    case "oneWayTwo":
+                        oneWayTwoDraw = true;
+                        location = trafficLight.getRoadLocation();
+                        break;
+                    case "threeWayOne":
+                        threeWayOneDraw = true;
+                        break;
+                    case "threeWayTwo":
+                        threeWayTwoDraw = true;
+                        break;
+                    case "threeWayThree":
+                        threeWayThreeDraw = true;
+                        break;
+                    case "threeWayFour":
+                        threeWayFourDraw = true;
+                        break;
+                    case "fourWay":
+                        fourWayDraw = true;
+                        break;
                 }
             }
             repaint();
@@ -216,7 +205,7 @@ public class MapPieces extends JButton implements ActionListener, ComponentListe
                 threeWayThreeDraw = false;
                 threeWayFourDraw = false;
                 fourWayDraw = false;
-                addTrafficLightThreeWay(0, "threeWayOne");
+                addTrafficLightThreeWay("threeWayOne");
                 repaint();
             } else if (name.equals("threeWayTwo")) {
                 oneWayDraw = false;
@@ -226,7 +215,7 @@ public class MapPieces extends JButton implements ActionListener, ComponentListe
                 threeWayThreeDraw = false;
                 threeWayFourDraw = false;
                 fourWayDraw = false;
-                addTrafficLightThreeWay(0, "threeWayTwo");
+                addTrafficLightThreeWay("threeWayTwo");
                 repaint();
             } else if (name.equals("threeWayThree")) {
                 oneWayDraw = false;
@@ -236,7 +225,7 @@ public class MapPieces extends JButton implements ActionListener, ComponentListe
                 threeWayThreeDraw = true;
                 threeWayFourDraw = false;
                 fourWayDraw = false;
-                addTrafficLightThreeWay(0, "threeWayThree");
+                addTrafficLightThreeWay("threeWayThree");
                 repaint();
             } else if (name.equals("threeWayFour")) {
                 oneWayDraw = false;
@@ -246,7 +235,7 @@ public class MapPieces extends JButton implements ActionListener, ComponentListe
                 threeWayThreeDraw = false;
                 threeWayFourDraw = true;
                 fourWayDraw = false;
-                addTrafficLightThreeWay(0, "threeWayFour");
+                addTrafficLightThreeWay("threeWayFour");
                 repaint();
             } else if (name.equals("fourWay")) {
                 oneWayDraw = false;
@@ -256,7 +245,7 @@ public class MapPieces extends JButton implements ActionListener, ComponentListe
                 threeWayThreeDraw = false;
                 threeWayFourDraw = false;
                 fourWayDraw = true;
-                addTrafficLightFourWay(1, "fourWay");
+                addTrafficLightFourWay();
                 repaint();
             }
         }
@@ -269,28 +258,28 @@ public class MapPieces extends JButton implements ActionListener, ComponentListe
         }
         w = getWidth();
         h = getHeight();
-        Image dimg = img.getScaledInstance(w, h, Image.SCALE_SMOOTH);
-        setIcon(new ImageIcon(dimg));
+        assert img != null; // Check how this line works
+        Image scaledImage = img.getScaledInstance(w, h, Image.SCALE_SMOOTH);
+        setIcon(new ImageIcon(scaledImage));
 
     }
-    private void addTrafficLightThreeWay(int i, String s) {
-        TrafficLight trafficLight41 = new TrafficLight(position, i, 't', 0, 1, s, 0);
-        TrafficLight trafficLight42 = new TrafficLight(position, i, 't', 0, 2, s, 0);
-        TrafficLight trafficLight43 = new TrafficLight(position, i, 't', 0, 3, s, 0);
-        TrafficLight trafficLight44 = new TrafficLight(position, i, 't', 0, 4, s, 0);
-        trafficLight41.printTrafficLight();
+
+    private void addTrafficLightThreeWay(String s) {
+        TrafficLight trafficLight41 = new TrafficLight(position, 0, 't', 0, 1, s, 0);
+        TrafficLight trafficLight42 = new TrafficLight(position, 0, 't', 0, 2, s, 0);
+        TrafficLight trafficLight43 = new TrafficLight(position, 0, 't', 0, 3, s, 0);
+        TrafficLight trafficLight44 = new TrafficLight(position, 0, 't', 0, 4, s, 0);
         trafficLightArrayList.add(trafficLight41);
         trafficLightArrayList.add(trafficLight42);
         trafficLightArrayList.add(trafficLight43);
         trafficLightArrayList.add(trafficLight44);
     }
 
-    private void addTrafficLightFourWay(int i, String s) {
-        TrafficLight trafficLight41 = new TrafficLight(position, i, 't', 0, 1, s, 0);
-        TrafficLight trafficLight42 = new TrafficLight(position, i, 't', 0, 2, s, 0);
-        TrafficLight trafficLight43 = new TrafficLight(position, i, 't', 0, 3, s, 0);
-        TrafficLight trafficLight44 = new TrafficLight(position, i, 't', 0, 4, s, 0);
-        trafficLight41.printTrafficLight();
+    private void addTrafficLightFourWay() {
+        TrafficLight trafficLight41 = new TrafficLight(position, 1, 't', 0, 1, "fourWay", 0);
+        TrafficLight trafficLight42 = new TrafficLight(position, 1, 't', 0, 2, "fourWay", 0);
+        TrafficLight trafficLight43 = new TrafficLight(position, 1, 't', 0, 3, "fourWay", 0);
+        TrafficLight trafficLight44 = new TrafficLight(position, 1, 't', 0, 4, "fourWay", 0);
         trafficLightArrayList.add(trafficLight41);
         trafficLightArrayList.add(trafficLight42);
         trafficLightArrayList.add(trafficLight43);
@@ -331,7 +320,6 @@ public class MapPieces extends JButton implements ActionListener, ComponentListe
             g.drawImage(image, gameWidth, gameHeight, null);
         }
         if (fourWayDraw) {
-            // Traffic Light 1
             w = getWidth();
             h = getHeight();
             trafficLightOne(g);
@@ -404,8 +392,9 @@ public class MapPieces extends JButton implements ActionListener, ComponentListe
             }
             w = getWidth();
             h = getHeight();
-            Image dimg = img.getScaledInstance(w, h, Image.SCALE_SMOOTH);
-            setIcon(new ImageIcon(dimg));
+            assert img != null;
+            Image scaledImg = img.getScaledInstance(w, h, Image.SCALE_SMOOTH);
+            setIcon(new ImageIcon(scaledImg));
         }
 
     }

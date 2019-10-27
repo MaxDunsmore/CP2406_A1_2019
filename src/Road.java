@@ -18,12 +18,6 @@ public class Road implements Serializable {
         return location;
     }
 
-    public Road() {
-        name = "";
-        orientation = 0;
-        location = 0;
-    }
-
     public Road(String name, int orientation, int location,int size) {
         this.name = name;
         this.orientation = orientation;
@@ -31,16 +25,7 @@ public class Road implements Serializable {
         this.size = size;
     }
 
-    void printRoad() { // displays road once piece is added to map (roadList)
-        System.out.println("You added a piece of road to your map");
-        System.out.println("Name: " + name + "\nOrientation: " + orientation + "\nLocation: " + location);
-    }
-
-    public int getSize() {
+    int getSize() {
         return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
     }
 }

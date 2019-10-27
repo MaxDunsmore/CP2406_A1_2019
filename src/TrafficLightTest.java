@@ -17,29 +17,27 @@ class TrafficLightTest {
     }
     @Test
     void testTrafficLightCycle2Way(){
-        TrafficLight trafficLight = new TrafficLight(3,0,'n',0,1,"Straight",0);
-        trafficLight.setLightCycle2Way();
-        trafficLight.setLightCycle2Way();
-        trafficLight.setLightCycle2Way();
-        assertEquals(trafficLight.getLightCycle(),3);
-        trafficLight.setLightCycle2Way();
-        assertEquals(trafficLight.getLightCycle(),0);
+        TrafficLight trafficLight = new TrafficLight(3,1,'n',0,2,"threeWayOne",0);
+        for (int i2 = 0; i2 < 22; i2++){
+            trafficLight.threeWayCycle();
+        }
+        assertEquals(trafficLight.getColour(),0);
+        for (int i2 = 0; i2 < 42; i2++){
+            trafficLight.threeWayCycle();
+        }
+        assertEquals(trafficLight.getColour(),1);
     }
     @Test
     void testTrafficLightCycle4Way(){
-        TrafficLight trafficLight4Way1 = new TrafficLight(4,0,'n',0,1,"4-way intersection",1);
-        trafficLight4Way1.setLightCycle4Way();
-        assertEquals(trafficLight4Way1.getLightCycle(),1.5);
-        trafficLight4Way1.setLightCycle4Way();
-        assertEquals(trafficLight4Way1.getLightCycle(),2);
-        trafficLight4Way1.setLightCycle4Way();
-        trafficLight4Way1.setLightCycle4Way();
-        trafficLight4Way1.setLightCycle4Way();
-        trafficLight4Way1.setLightCycle4Way();
-        trafficLight4Way1.setLightCycle4Way();
-        trafficLight4Way1.setLightCycle4Way();
-        trafficLight4Way1.setLightCycle4Way();
-        assertEquals(trafficLight4Way1.getLightCycle(),1.5);
+        TrafficLight trafficLight = new TrafficLight(3,1,'n',0,2,"fourWay",0);
+        for (int i2 = 0; i2 < 42; i2++){
+            trafficLight.fourWayCycle();
+        }
+        assertEquals(trafficLight.getColour(),0);
+        for (int i2 = 0; i2 < 61; i2++){
+            trafficLight.fourWayCycle();
+        }
+        assertEquals(trafficLight.getColour(),1);
     }
     @Test
     void testTrafficLightChangeColour(){
