@@ -110,6 +110,6 @@ public class Vehicle {
         speed = 0;
     }
     void moveVehicleRoadLocation(){ // sets the vehicles next location based of speed
-        roadLocation += speed;
+        roadLocation = roadLocation + speed;
     }
 }
