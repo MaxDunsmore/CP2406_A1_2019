@@ -10,6 +10,10 @@ public class Vehicle {
     private int id; // use to select singular vehicles for adding them to the map
     private int chosenDirection; // used when at a intersection to decide what way the vehicle is going
 
+    public String getName() {
+        return name;
+    }
+
 
     int getCarX() {
         return carX;
