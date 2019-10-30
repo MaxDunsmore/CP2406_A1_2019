@@ -25,7 +25,6 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
     private int busWL = 0;
     private int bikeWL = 0;
     int bikeH = 0;
-
     int carHCalc;
     int carWCalc;
 
@@ -504,17 +503,27 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
         if (source == menuNew) {
+
+            if(timer != null) {
+                timer.stop();
+            }
             labelStatusBar.setText("New map selected");
             if (map > 0) {
+                System.out.println("Test");
                 remove(grid);
+                grid.removeAll();
+
             }
             roadArrayList.clear();
             trafficLightArrayList.clear();
+            vehiclesArrayList.clear();
             gridEastButtons.setVisible(true);
+
 
             // Makes a list for the current map
             int[] currentMap = new int[mapSize];
             int currentSize = 0;
+            position = 0;
             createEmptyMap(mapSize, currentSize, currentMap);
             boolean error = true;
             while (error) {
@@ -598,7 +607,10 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
         }
         if (source == menuStop) {
             labelStatusBar.setText("Simulation Stopped");
-            timer.stop();
+            if(timer != null) {
+                timer.stop();
+            }
+            vehiclesArrayList.clear();
         }
         if (source == menuOpen) {
             name = "";
@@ -757,6 +769,7 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
             getBottomMap(map, roadArrayList, bottomMap, currentMapSize); // gets the bottom of the map (for cars entering the map)
             getLeftMap(map, roadArrayList, leftMap, currentMapSize); // gets the left of the map (for cars entering the map)
             getRightMap(map, roadArrayList, rightMap, currentMapSize); // gets the right of the map (for cars entering the map)
+
 
             timer = new Timer(10, ex -> {
                 gridSizeWidth = grid.getWidth();
