@@ -24,6 +24,11 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
     private int busH = 0;
     private int busWL = 0;
     private int bikeWL = 0;
+    int bikeH = 0;
+
+    int carHCalc;
+    int carWCalc;
+
     private int slowDownSpeedBottomT = 800;
     private int stopDistanceBottomT = 900;
     private int slowDownIntersection = 400;
@@ -37,12 +42,14 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
     private int vehicles;
     private int vehiclesOnMap;
     private int exitIntersection = 600;
-    private int numberOfCars = 2;
-    private int numberOfBus = 2;
-    private int numberOfBike = 2;
+    private int numberOfCars = 8;
+    private int numberOfBus = 0;
+    private int numberOfBike = 0;
     private int enterMapSpeed;
     private int enterMapSpeedCount = 0;
     private int avgSpeed;
+    int vehicleNextLocation;
+    int nextLocationBrake;
     private int[] topMap;
     private int[] bottomMap;
     private int[] leftMap;
@@ -70,6 +77,7 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
     private JRadioButton threeWayRoadButton = new JRadioButton("Three Way Road");
     private JRadioButton fourWayRoadButton = new JRadioButton("Four Way Road");
     private JRadioButton trafficLightButton = new JRadioButton("Traffic Light");
+
     private ImageIcon createImageIcon(String path) {
         java.net.URL imgURL = getClass().getResource(path);
         if (imgURL != null) {
@@ -79,6 +87,7 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
             return null;
         }
     }
+
     private JPanel gridEastButtons = new JPanel(new GridLayout(6, 1, 4, 4));// change to map size
     private JLabel oneWayIcon = new JLabel();
     private JLabel threeWayIcon = new JLabel();
@@ -131,6 +140,7 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
     private Random rand = new Random();
     private boolean checkMapLocation = true;
     private Timer timer;
+    double nextRoadLocation;
 
     private TrafficSimulatorGUI() throws IOException {
         setTitle("Traffic Simulator");
@@ -198,6 +208,7 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
         final int HEIGHT = 1000;
         frame.setSize(WIDTH, HEIGHT);
         new TrafficSimulatorGUI();
+        frame.setBackground(Color.GREEN);
         frame.setVisible(true);
     }
 
@@ -285,7 +296,7 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
                         drawCarDown(g, vehicle);
                     } else if ("fourWay".equals(road.getName())) {
                         drawCarDown(g, vehicle);
-                    } else if ("ThreeWayTwo".equals(road.getName()) || "ThreeWayThree".equals(road.getName()) || "ThreeWayFour".equals(road.getName())) {
+                    } else if ("threeWayTwo".equals(road.getName()) || "threeWayThree".equals(road.getName()) || "threeWayFour".equals(road.getName()) || "threeWayOne".equals(road.getName())) {
                         drawCarDown(g, vehicle);
                     }
                 } else if (vehicle.getRoadDirection() == left) {
@@ -293,15 +304,16 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
                         drawCarLeft(g, vehicle);
                     } else if ("fourWay".equals(road.getName())) {
                         drawCarLeft(g, vehicle);
-                    } else if ("ThreeWayTwo".equals(road.getName()) || "ThreeWayOne".equals(road.getName()) || "ThreeWayFour".equals(road.getName())) {
+                    } else if ("threeWayTwo".equals(road.getName()) || "threeWayOne".equals(road.getName()) || "threeWayFour".equals(road.getName()) || "threeWayThree".equals(road.getName())) {
                         drawCarLeft(g, vehicle);
                     }
                 } else if (vehicle.getRoadDirection() == right) {
+
                     if ("oneWayTwo".equals(road.getName())) {
                         drawCarRight(g, vehicle);
                     } else if ("fourWay".equals(road.getName())) {
                         drawCarRight(g, vehicle);
-                    } else if ("ThreeWayTwo".equals(road.getName()) || "ThreeWayThree".equals(road.getName()) || "ThreeWayOne".equals(road.getName())) {
+                    } else if ("threeWayTwo".equals(road.getName()) || "threeWayThree".equals(road.getName()) || "threeWayOne".equals(road.getName()) || "threeWayFour".equals(road.getName())) {
                         drawCarRight(g, vehicle);
                     }
                 } else if (vehicle.getRoadDirection() == up) {
@@ -309,7 +321,7 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
                         drawCarUp(g, vehicle);
                     } else if ("fourWay".equals(road.getName())) {
                         drawCarUp(g, vehicle);
-                    } else if ("ThreeWayOne".equals(road.getName()) || "ThreeWayThree".equals(road.getName()) || "ThreeWayFour".equals(road.getName())) {
+                    } else if ("threeWayOne".equals(road.getName()) || "threeWayThree".equals(road.getName()) || "threeWayFour".equals(road.getName()) || "threeWayTwo".equals(road.getName())) {
                         drawCarUp(g, vehicle);
                     }
                 }
@@ -474,6 +486,7 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
         int carY = (int) (gridSizeHeight - (vehicle.getRoadLocation() / map) + (gridSizeHeight * yLocation));
         vehicle.setCarY(carY);
         vehicle.setCarX(carX);
+        //System.out.println("Speed : " + vehicle.getSpeed() + "   RLocation : " + vehicle.getRoadLocation());
         switch (vehicle.getName()) {
             case "Car":
                 g.drawImage(imageCarU, vehicle.getCarX(), vehicle.getCarY(), carW, carH, null);
@@ -485,7 +498,6 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
                 g.drawImage(imageBikeU, vehicle.getCarX(), vehicle.getCarY(), carW, carH, null);
                 break;
         }
-        g.drawImage(imageCarU, vehicle.getCarX(), vehicle.getCarY(), carW, carH, null);
     }
 
     @Override
@@ -685,11 +697,11 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
             JDialog dialog = optionPane.createDialog("Please select the entry rate for vehicles");
             dialog.setVisible(true);
             if (optionPane.getInputValue() == "uninitializedValue") {
-                enterMapSpeed = 25;
+                enterMapSpeed = 0;
             } else {
                 enterMapSpeed = (int) optionPane.getInputValue();
             }
-          /*
+/*
             boolean error = true;
             while (error){
                 try {
@@ -756,6 +768,7 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
                 carW = (int) gridSizeWidth / 19;
                 carHL = (int) gridSizeHeight / 19;
                 carWL = (int) gridSizeWidth / 10;
+
                 busH = (int) gridSizeHeight / 5;
                 busWL = (int) gridSizeWidth / 5;
                 bikeWL = (int) gridSizeWidth / 20;
@@ -768,9 +781,12 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
                 vehiclesArrayList.forEach(vehicle -> {
                     roadArrayList.stream().filter(r -> r.getLocation() == vehicle.getLocation()).forEach(road -> {
                         vehiclesArrayList.forEach(v2 -> {
-                            double nextRoadLocation = vehicle.getRoadLocation() + vehicle.getSpeed();
+
+                            nextRoadLocation = vehicle.getRoadLocation() + vehicle.getSpeed();
+
                             if (road.getName().contains("oneWay")) {
-                                oneWayCheckInFront(vehicle, v2, nextRoadLocation);
+                                oneWayCheckInFront(vehicle, v2, nextRoadLocation); // move check to up here - traffic lihght code is moving the vehicle when it is looking for the correct v2
+                                nextRoadLocation = vehicle.getRoadLocation() + vehicle.getSpeed();
                             } else if (road.getName().contains("threeWay")) { // fix traffic light code to match changes made to classes
                                 if (vehicle.getRoadDirection() == down) {
                                     trafficLightIntersection(vehicle, nextRoadLocation);
@@ -807,10 +823,8 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
                                 }
                             }
                             if (accelerateVehicle) { // runs if nothing is causing the vehicle to decelerate
+
                                 int nextLocation;
-                                if (vehicle.getSpeed() == 0) {
-                                    vehicle.accelerateVehicle();
-                                }
                                 if (vehicle.getLocation() <= mapSize && vehicle.getRoadLocation() > 0) {
                                     vehicle.accelerateVehicle();
                                     if (vehicle.getRoadDirection() == down) {
@@ -958,7 +972,7 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
     }
 
     private static JSlider getSlider(final JOptionPane optionPane) {
-        JSlider slider = new JSlider(0,50);
+        JSlider slider = new JSlider(0, 50);
         slider.setMajorTickSpacing(5);
         slider.setPaintTicks(true);
         slider.setPaintLabels(true);
@@ -981,6 +995,7 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
                             decelerateTrafficLight(vehicle, nextRoadLocation, slowDownIntersection, stopIntersection, slowDownSecond3Way);
                             accelerateVehicle = false;
                         }
+
                     } else if (vehicle.getRoadDirection() == left && t.getTrafficLightNumber() == 2) {
                         if (vehicle.getRoadLocation() >= slowDownIntersection && vehicle.getRoadLocation() <= stopIntersection) {
                             decelerateTrafficLight(vehicle, nextRoadLocation, slowDownIntersection, stopIntersection, slowDownSecond3Way);
@@ -1009,7 +1024,7 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
                 vehicle.decelerateVehicle();
                 vehicle.moveVehicleRoadLocation();
                 accelerateVehicle = false;
-            } else if (nextRoadLocation >= slowDownSecond3Way && nextRoadLocation <= intersectionTurn){ // add code above to slow down vehicle - think it is skipping it ( goes from 6 to 11) - make this code else if
+            } else if (nextRoadLocation >= slowDownSecond3Way && nextRoadLocation <= intersectionTurn) { // add code above to slow down vehicle - think it is skipping it ( goes from 6 to 11) - make this code else if
                 getDirection(max4WayRandom, rand, vehicle);
                 vehicle.setRoadLocation(stopIntersection);
                 if (nextRoadLocation <= stopIntersection && vehicle.getSpeed() != 0) {
@@ -1068,27 +1083,23 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
     }
 
     private void oneWayCheckInFront(Vehicle vehicle, Vehicle v2, double nextRoadLocation) {
-        if (vehicle.getRoadLocation() < v2.getRoadLocation() && vehicle.getLocation() == v2.getLocation()) {
-            checkVehicleInFront(vehicle, nextRoadLocation, v2);
-        } else {
-            // else no cars in front, check for traffic lights.
-            trafficLightArrayList.stream().filter(t -> t.getLocation() == vehicle.getLocation()).forEach(trafficLight -> {
-                if (vehicle.getRoadDirection() == down && trafficLight.getRoadLocation() == 1 && trafficLight.getColour() == 1) {
-                    decelerateTrafficLight(vehicle, nextRoadLocation, slowDownSpeedBottomT, roadLength, stopDistanceBottomT);
-                } else if (vehicle.getRoadDirection() == left && trafficLight.getRoadLocation() == 0 && trafficLight.getColour() == 1) {
-                    decelerateTrafficLight(vehicle, nextRoadLocation, slowDownSpeedBottomT, roadLength, stopDistanceBottomT);
-                } else if (vehicle.getRoadDirection() == right && trafficLight.getRoadLocation() == 1 && trafficLight.getColour() == 1) {
-                    decelerateTrafficLight(vehicle, nextRoadLocation, slowDownSpeedBottomT, roadLength, stopDistanceBottomT);
-                } else if (vehicle.getRoadDirection() == up && trafficLight.getRoadLocation() == 0 && trafficLight.getColour() == 1) {
-                    decelerateTrafficLight(vehicle, nextRoadLocation, slowDownSpeedBottomT, roadLength, stopDistanceBottomT);
-                }
-            });
-        }
+        trafficLightArrayList.stream().filter(t -> t.getLocation() == vehicle.getLocation()).forEach(trafficLight -> {
+            if (vehicle.getRoadDirection() == down && trafficLight.getRoadLocation() == 1 && trafficLight.getColour() == 1) {
+                decelerateTrafficLight(vehicle, nextRoadLocation, slowDownSpeedBottomT, roadLength, stopDistanceBottomT);
+            } else if (vehicle.getRoadDirection() == left && trafficLight.getRoadLocation() == 0 && trafficLight.getColour() == 1) {
+                decelerateTrafficLight(vehicle, nextRoadLocation, slowDownSpeedBottomT, roadLength, stopDistanceBottomT);
+            } else if (vehicle.getRoadDirection() == right && trafficLight.getRoadLocation() == 1 && trafficLight.getColour() == 1) {
+                decelerateTrafficLight(vehicle, nextRoadLocation, slowDownSpeedBottomT, roadLength, stopDistanceBottomT);
+            } else if (vehicle.getRoadDirection() == up && trafficLight.getRoadLocation() == 0 && trafficLight.getColour() == 1) {
+                decelerateTrafficLight(vehicle, nextRoadLocation, slowDownSpeedBottomT, roadLength, stopDistanceBottomT);
+            }
+        });
+        checkVehicleInFront(vehicle, nextRoadLocation, v2);
     }
 
     private void checkInFront(Vehicle vehicle, Vehicle v2, double nextRoadLocation) {
         if (vehicle.getRoadLocation() < v2.getRoadLocation() && vehicle.getLocation() == v2.getLocation() && vehicle.getId() != v2.getId()) {
-            checkVehicleInFront(vehicle, nextRoadLocation,v2);
+            checkVehicleInFront(vehicle, nextRoadLocation, v2);
         } else {
             trafficLightIntersection(vehicle, nextRoadLocation);
         }
@@ -1101,6 +1112,8 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
         for (TrafficLight t : trafficLightArrayList) {
             trafficLight = rand.nextInt(((100 - 1) + 1)) + 1;
             if ("oneWay".equals(t.getRoadName()) || "oneWayTwo".equals(t.getRoadName())) {
+                t.setColour(1);
+                /*
                 if (t.getChangedColourTimer() == 0) {
                     if (trafficLight > 50) {
                         t.changeColour();
@@ -1109,6 +1122,7 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
                 } else {
                     t.colourTimer();
                 }
+                 */
             } else if ("threeWayOne".equals(t.getRoadName()) || "threeWayTwo".equals(t.getRoadName()) || "threeWayThree".equals(t.getRoadName()) || "threeWayFour".equals(t.getRoadName())) {
                 if (trafficLight3Way > 35) {
                     t.threeWayCycle();
@@ -1125,13 +1139,12 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
         boolean exitMap = true;
         boolean test = true;
         double nextRoadLocation = vehicle.getRoadLocation() + vehicle.getSpeed();
-        if (nextRoadLocation < roadLength) {
-            vehicle.moveVehicleRoadLocation();
-        } else if (nextRoadLocation >= roadLength) {
+        if (nextRoadLocation >= roadLength) {
             for (Road road : roadArrayList) {
                 if (road.getLocation() == nextLocation) {// place nextLocation over map
                     if (vehicle.getRoadDirection() == down) {
                         if (road.getName().equals("oneWayTwo") || road.getName().equals("threeWayOne")) {
+                            vehiclesOnMap--;
                             exitMap = true;
                             moveVehicle = false;
                             test = false;
@@ -1189,7 +1202,7 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
                                 test = false;
                             }
                         }
-                    }
+                    }// possibly add code to slow down for next vehicle
                     if (test) {
                         vehicle.setLocation(nextLocation);// for loop check for road pieces at new place, if none and code to turn around
                         vehicle.setRoadLocation(nextRoadLocation - roadLength); // set based on mps+ roadLocation - roadLength
@@ -1220,7 +1233,7 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
                 //v.moveVehicleRoadLocation();
                 accelerateVehicle = false;
             } else if (nextRoadLocation >= i3) {
-                v.setRoadLocation(i3);
+                //v.setRoadLocation(i3);
                 v.stopVehicle();
                 accelerateVehicle = false;
             }
@@ -1228,19 +1241,52 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
     }
 
     private void checkVehicleInFront(Vehicle v, double nextRoadLocation, Vehicle v2) {
-        if (v2.getRoadLocation() - v2.getLength() - nextRoadLocation <= 150) {
-            v.stopVehicle();
-            accelerateVehicle = false;
-            moveVehicle = false;
-        } else if (v2.getRoadLocation() - v2.getLength() - nextRoadLocation <= stopVehicle) {
-            if (v.getId() != v2.getId() && v.getLocation() == v2.getLocation()) {
-                if (v.getSpeed() > 1) {
-                    v.setSpeed(v.getSpeed() - 1);
-                    v.setRoadLocation(nextRoadLocation);
+        // System.out.println(v.getLocation() + "  " + v2.getLocation());
+        if (v.getRoadLocation() < v2.getRoadLocation() && v.getLocation() == v2.getLocation()) {
+            if (v2.getRoadLocation() - v2.getLength() - nextRoadLocation <= 350) {
+                if (v.getLocation() == v2.getLocation()) {
+                    v.stopVehicle();
                     accelerateVehicle = false;
+                    moveVehicle = false;
+                }
+
+            } else if (v2.getRoadLocation() - v2.getLength() - nextRoadLocation <= 450) {
+                if (v.getLocation() == v2.getLocation()) {
+                    if (v.getSpeed() > 1) {
+                        v.setSpeed(v.getSpeed() - 1);
+                        //v.setRoadLocation(nextRoadLocation);
+                        accelerateVehicle = false;
+                    }
                 }
             }
         }
+        if (v.getRoadDirection() == up){
+            vehicleNextLocation = v2.getLocation() + map;
+        }
+        else  if (v.getRoadDirection() == down){
+            vehicleNextLocation = v2.getLocation() - map;
+        }
+        else  if (v.getRoadDirection() == right){
+            vehicleNextLocation = v2.getLocation() - 1;
+        }
+        else  if (v.getRoadDirection() == left){
+            vehicleNextLocation = v2.getLocation() + 1;
+        }
+
+
+        nextLocationBrake = (int) (v.getRoadLocation() - 650);
+
+        if (v.getLocation() == vehicleNextLocation) {
+            if (v.getRoadLocation() + 350 >roadLength){
+                if (nextLocationBrake > v2.getRoadLocation() ) {
+                    v.stopVehicle();
+                    accelerateVehicle = false;
+                    moveVehicle = false;
+                }
+            }
+
+        }
+
     }
 
     private void enterTopMap(int roadLocation) { // add code to show direction cars are facing
@@ -1291,7 +1337,7 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
         }
     }
 
-    private void enterLeftMap( int roadLocation) {
+    private void enterLeftMap(int roadLocation) {
         char roadDirection = right;
         checkMapLocation = true;
         for (int leftMap : leftMap) { // search through top of map
@@ -1336,10 +1382,21 @@ public class TrafficSimulatorGUI extends JFrame implements ActionListener {
         }
     }
 
-    private void checkVehicleList( int roadLocation, int i, char roadDirection) {
+    private void checkVehicleList(int roadLocation, int i, char roadDirection) {
         if (enterMapSpeed <= enterMapSpeedCount) {
             for (Vehicle v : vehiclesArrayList) {
-                if (i == v.getLocation() && v.getRoadLocation() + v.getLength() < 150) {
+                if (i == v.getLocation() && v.getRoadLocation() - v.getLength() < 350 && v.getRoadDirection() == up) {
+                    checkMapLocation = false;
+                    break;
+                } else if (i == v.getLocation() && v.getRoadLocation() < 350 && v.getRoadDirection() == down) {
+                    checkMapLocation = false;
+                    break;
+                }
+                else if (i == v.getLocation() && v.getRoadLocation() - v.getLength() < 350 && v.getRoadDirection() == right) {
+                    checkMapLocation = false;
+                    break;
+                }
+                else if (i == v.getLocation() && v.getRoadLocation() - v.getLength() < 350 && v.getRoadDirection() == left) {
                     checkMapLocation = false;
                     break;
                 }

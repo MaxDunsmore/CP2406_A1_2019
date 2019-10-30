@@ -17,6 +17,10 @@ class TrafficLight implements Serializable {
         return location;
     }
 
+    public void setColour(int colour) {
+        this.colour = colour;
+    }
+
     int getColour() {
         return colour;
     }
