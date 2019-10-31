@@ -8,20 +8,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class MapPiecesRun extends JLabel implements ComponentListener {
-    private ImageIcon oneWay, oneWayTwo, threeWayOne, threeWayTwo, threeWayThree, threeWayFour, fourWay;
     private String name = "";
-    private int w = getWidth();
-    private int h = getHeight();
-    private String imgPath = "images/trafficLight.png";
 
-    MapPiecesRun(int position, ArrayList<Road> roadArrayList) throws IOException {
-        oneWay = new ImageIcon(this.getClass().getResource("images/oneWay.png"));
-        oneWayTwo = new ImageIcon(this.getClass().getResource("images/oneWayTwo.png"));
-        threeWayOne = new ImageIcon(this.getClass().getResource("images/threeWayOne.png"));
-        threeWayTwo = new ImageIcon(this.getClass().getResource("images/threeWayTwo.png"));
-        threeWayThree = new ImageIcon(this.getClass().getResource("images/threeWayThree.png"));
-        threeWayFour = new ImageIcon(this.getClass().getResource("images/threeWayFour.png"));
-        fourWay = new ImageIcon(this.getClass().getResource("images/fourWay.png"));
+    MapPiecesRun(int position, ArrayList<Road> roadArrayList) {
+        ImageIcon oneWay = new ImageIcon(this.getClass().getResource("images/oneWay.png"));
+        ImageIcon oneWayTwo = new ImageIcon(this.getClass().getResource("images/oneWayTwo.png"));
+        ImageIcon threeWayOne = new ImageIcon(this.getClass().getResource("images/threeWayOne.png"));
+        ImageIcon threeWayTwo = new ImageIcon(this.getClass().getResource("images/threeWayTwo.png"));
+        ImageIcon threeWayThree = new ImageIcon(this.getClass().getResource("images/threeWayThree.png"));
+        ImageIcon threeWayFour = new ImageIcon(this.getClass().getResource("images/threeWayFour.png"));
+        ImageIcon fourWay = new ImageIcon(this.getClass().getResource("images/fourWay.png"));
         Toolkit.getDefaultToolkit().setDynamicLayout(true);
         this.addComponentListener(this);
         for (Road road : roadArrayList) {
@@ -79,8 +75,9 @@ public class MapPiecesRun extends JLabel implements ComponentListener {
             } catch (IOException error) {
                 error.printStackTrace();
             }
-            w = getWidth();
-            h = getHeight();
+            int w = getWidth();
+            int h = getHeight();
+            assert img != null;
             Image dimg = img.getScaledInstance(w, h, Image.SCALE_SMOOTH);
             setIcon(new ImageIcon(dimg));
         }

@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class MapPieces extends JButton implements ActionListener, ComponentListener {
-    private ImageIcon oneWay, oneWayTwo, threeWayOne, threeWayTwo, threeWayThree, threeWayFour, fourWay, trafficLight;
     private JLabel oneWayIcon, threeWayIcon;
     private JRadioButton oneWayRoadButton;
     private JRadioButton threeWayRoadButton;
@@ -21,8 +20,6 @@ public class MapPieces extends JButton implements ActionListener, ComponentListe
     private ArrayList<TrafficLight> trafficLightArrayList;
     private int w = getWidth();
     private int h = getHeight();
-    private double positionW;
-    private double positionH;
     private int gameHeight;
     private int gameWidth;
     private boolean oneWayDraw = false;
@@ -37,14 +34,13 @@ public class MapPieces extends JButton implements ActionListener, ComponentListe
     private final BufferedImage image = ImageIO.read(getClass().getResourceAsStream(imgPath));
 
     MapPieces(JRadioButton oneWayRoadButton, JRadioButton threeWayRoadButton, JRadioButton fourWayRoadButton, JLabel oneWayIcon, JLabel threeWayIcon, int position, ArrayList<Road> roadArrayList, int map, JRadioButton trafficLightButton, ArrayList<TrafficLight> trafficLightArrayList) throws IOException {
-        oneWay = new ImageIcon(this.getClass().getResource("images/oneWay.png"));
-        oneWayTwo = new ImageIcon(this.getClass().getResource("images/oneWayTwo.png"));
-        threeWayOne = new ImageIcon(this.getClass().getResource("images/threeWayOne.png"));
-        threeWayTwo = new ImageIcon(this.getClass().getResource("images/threeWayTwo.png"));
-        threeWayThree = new ImageIcon(this.getClass().getResource("images/threeWayThree.png"));
-        threeWayFour = new ImageIcon(this.getClass().getResource("images/threeWayFour.png"));
-        fourWay = new ImageIcon(this.getClass().getResource("images/fourWay.png"));
-        trafficLight = new ImageIcon(this.getClass().getResource("images/trafficLight.png"));
+        ImageIcon oneWay = new ImageIcon(this.getClass().getResource("images/oneWay.png"));
+        ImageIcon oneWayTwo = new ImageIcon(this.getClass().getResource("images/oneWayTwo.png"));
+        ImageIcon threeWayOne = new ImageIcon(this.getClass().getResource("images/threeWayOne.png"));
+        ImageIcon threeWayTwo = new ImageIcon(this.getClass().getResource("images/threeWayTwo.png"));
+        ImageIcon threeWayThree = new ImageIcon(this.getClass().getResource("images/threeWayThree.png"));
+        ImageIcon threeWayFour = new ImageIcon(this.getClass().getResource("images/threeWayFour.png"));
+        ImageIcon fourWay = new ImageIcon(this.getClass().getResource("images/fourWay.png"));
         Toolkit.getDefaultToolkit().setDynamicLayout(true);
         this.addActionListener(this);
         this.addComponentListener(this);
@@ -171,82 +167,92 @@ public class MapPieces extends JButton implements ActionListener, ComponentListe
         }
         if (trafficLightButton.isSelected()) {
             location = 0;
-            if (name.equals("oneWay")) {
-                String[] options = {"Top", "Bottom"};
-                location = JOptionPane.showOptionDialog(null, "Choose where you would like the traffic light to go", "Traffic light position", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-                oneWayDraw = true;
-                oneWayTwoDraw = false;
-                threeWayOneDraw = false;
-                threeWayTwoDraw = false;
-                threeWayThreeDraw = false;
-                threeWayFourDraw = false;
-                fourWayDraw = false;
-                TrafficLight trafficLight = new TrafficLight(position, 1, location, 0, 1, "oneWay", 1);
-                trafficLightArrayList.add(trafficLight);
-                repaint();
-            } else if (name.equals("oneWayTwo")) {
-                String[] options = {"Left", "Right"};
-                location = JOptionPane.showOptionDialog(null, "Choose where you would like the traffic light to go", "Traffic light position", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-                oneWayDraw = false;
-                oneWayTwoDraw = true;
-                threeWayOneDraw = false;
-                threeWayTwoDraw = false;
-                threeWayThreeDraw = false;
-                threeWayFourDraw = false;
-                fourWayDraw = false;
-                TrafficLight trafficLight = new TrafficLight(position, 1, location, 0, 1, "oneWayTwo", 1);
-                trafficLightArrayList.add(trafficLight);
-                repaint();
-            } else if (name.equals("threeWayOne")) {
-                oneWayDraw = false;
-                oneWayTwoDraw = false;
-                threeWayOneDraw = true;
-                threeWayTwoDraw = false;
-                threeWayThreeDraw = false;
-                threeWayFourDraw = false;
-                fourWayDraw = false;
-                addTrafficLightThreeWay("threeWayOne");
-                repaint();
-            } else if (name.equals("threeWayTwo")) {
-                oneWayDraw = false;
-                oneWayTwoDraw = false;
-                threeWayOneDraw = false;
-                threeWayTwoDraw = true;
-                threeWayThreeDraw = false;
-                threeWayFourDraw = false;
-                fourWayDraw = false;
-                addTrafficLightThreeWay("threeWayTwo");
-                repaint();
-            } else if (name.equals("threeWayThree")) {
-                oneWayDraw = false;
-                oneWayTwoDraw = false;
-                threeWayOneDraw = false;
-                threeWayTwoDraw = false;
-                threeWayThreeDraw = true;
-                threeWayFourDraw = false;
-                fourWayDraw = false;
-                addTrafficLightThreeWay("threeWayThree");
-                repaint();
-            } else if (name.equals("threeWayFour")) {
-                oneWayDraw = false;
-                oneWayTwoDraw = false;
-                threeWayOneDraw = false;
-                threeWayTwoDraw = false;
-                threeWayThreeDraw = false;
-                threeWayFourDraw = true;
-                fourWayDraw = false;
-                addTrafficLightThreeWay("threeWayFour");
-                repaint();
-            } else if (name.equals("fourWay")) {
-                oneWayDraw = false;
-                oneWayTwoDraw = false;
-                threeWayOneDraw = false;
-                threeWayTwoDraw = false;
-                threeWayThreeDraw = false;
-                threeWayFourDraw = false;
-                fourWayDraw = true;
-                addTrafficLightFourWay();
-                repaint();
+            switch (name) {
+                case "oneWay": {
+                    String[] options = {"Top", "Bottom"};
+                    location = JOptionPane.showOptionDialog(null, "Choose where you would like the traffic light to go", "Traffic light position", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+                    oneWayDraw = true;
+                    oneWayTwoDraw = false;
+                    threeWayOneDraw = false;
+                    threeWayTwoDraw = false;
+                    threeWayThreeDraw = false;
+                    threeWayFourDraw = false;
+                    fourWayDraw = false;
+                    TrafficLight trafficLight = new TrafficLight(position, 1, location, 0, 1, "oneWay", 1);
+                    trafficLightArrayList.add(trafficLight);
+                    repaint();
+                    break;
+                }
+                case "oneWayTwo": {
+                    String[] options = {"Left", "Right"};
+                    location = JOptionPane.showOptionDialog(null, "Choose where you would like the traffic light to go", "Traffic light position", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+                    oneWayDraw = false;
+                    oneWayTwoDraw = true;
+                    threeWayOneDraw = false;
+                    threeWayTwoDraw = false;
+                    threeWayThreeDraw = false;
+                    threeWayFourDraw = false;
+                    fourWayDraw = false;
+                    TrafficLight trafficLight = new TrafficLight(position, 1, location, 0, 1, "oneWayTwo", 1);
+                    trafficLightArrayList.add(trafficLight);
+                    repaint();
+                    break;
+                }
+                case "threeWayOne":
+                    oneWayDraw = false;
+                    oneWayTwoDraw = false;
+                    threeWayOneDraw = true;
+                    threeWayTwoDraw = false;
+                    threeWayThreeDraw = false;
+                    threeWayFourDraw = false;
+                    fourWayDraw = false;
+                    addTrafficLightThreeWay("threeWayOne");
+                    repaint();
+                    break;
+                case "threeWayTwo":
+                    oneWayDraw = false;
+                    oneWayTwoDraw = false;
+                    threeWayOneDraw = false;
+                    threeWayTwoDraw = true;
+                    threeWayThreeDraw = false;
+                    threeWayFourDraw = false;
+                    fourWayDraw = false;
+                    addTrafficLightThreeWay("threeWayTwo");
+                    repaint();
+                    break;
+                case "threeWayThree":
+                    oneWayDraw = false;
+                    oneWayTwoDraw = false;
+                    threeWayOneDraw = false;
+                    threeWayTwoDraw = false;
+                    threeWayThreeDraw = true;
+                    threeWayFourDraw = false;
+                    fourWayDraw = false;
+                    addTrafficLightThreeWay("threeWayThree");
+                    repaint();
+                    break;
+                case "threeWayFour":
+                    oneWayDraw = false;
+                    oneWayTwoDraw = false;
+                    threeWayOneDraw = false;
+                    threeWayTwoDraw = false;
+                    threeWayThreeDraw = false;
+                    threeWayFourDraw = true;
+                    fourWayDraw = false;
+                    addTrafficLightThreeWay("threeWayFour");
+                    repaint();
+                    break;
+                case "fourWay":
+                    oneWayDraw = false;
+                    oneWayTwoDraw = false;
+                    threeWayOneDraw = false;
+                    threeWayTwoDraw = false;
+                    threeWayThreeDraw = false;
+                    threeWayFourDraw = false;
+                    fourWayDraw = true;
+                    addTrafficLightFourWay();
+                    repaint();
+                    break;
             }
         }
         BufferedImage img = null;
@@ -370,8 +376,8 @@ public class MapPieces extends JButton implements ActionListener, ComponentListe
     }
 
     private void trafficLightOne(Graphics g) {
-        positionW = 0.4;
-        positionH = 0.4;
+        double positionW = 0.4;
+        double positionH = 0.4;
         gameWidth = (int) (Math.round(w * positionW));
         gameWidth = gameWidth - 24;
         gameHeight = (int) (Math.round(h * positionH));
