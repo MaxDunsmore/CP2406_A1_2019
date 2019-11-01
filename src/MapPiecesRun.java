@@ -11,6 +11,7 @@ public class MapPiecesRun extends JLabel implements ComponentListener {
     private String name = "";
 
     MapPiecesRun(int position, ArrayList<Road> roadArrayList) {
+        // declares icons for map pieces
         ImageIcon oneWay = new ImageIcon(this.getClass().getResource("images/oneWay.png"));
         ImageIcon oneWayTwo = new ImageIcon(this.getClass().getResource("images/oneWayTwo.png"));
         ImageIcon threeWayOne = new ImageIcon(this.getClass().getResource("images/threeWayOne.png"));
@@ -21,7 +22,6 @@ public class MapPiecesRun extends JLabel implements ComponentListener {
         Toolkit.getDefaultToolkit().setDynamicLayout(true);
         this.addComponentListener(this);
         for (Road road : roadArrayList) {
-            // redesign code to match new names - figure out how to use resize code
             if (road.getLocation() == position) {
                 switch (road.getName()) {
                     case "oneWay":

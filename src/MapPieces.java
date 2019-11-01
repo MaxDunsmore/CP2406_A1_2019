@@ -7,21 +7,23 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class MapPieces extends JButton implements ActionListener, ComponentListener {
+    // declares icons for map pieces
     private JLabel oneWayIcon, threeWayIcon;
     private JRadioButton oneWayRoadButton;
     private JRadioButton threeWayRoadButton;
     private JRadioButton fourWayRoadButton;
     private JRadioButton trafficLightButton;
-    private int position;
-    private int map;
-    private int location;
-    private String name = "";
+    private int position; // position of road pieces
+    private int map; // size of map
+    private int location; // location of traffic lights
+    private String name = ""; // name of road piece
     private ArrayList<Road> roadArrayList;
     private ArrayList<TrafficLight> trafficLightArrayList;
-    private int w = getWidth();
-    private int h = getHeight();
-    private int gameHeight;
-    private int gameWidth;
+    private int w = getWidth(); // height of gridLayout
+    private int h = getHeight(); // width of gridLayout
+    private int gameHeight;// height of map piece
+    private int gameWidth;;// width of map piece
+    // boolean value to determine if to draw traffic lights
     private boolean oneWayDraw = false;
     private boolean oneWayTwoDraw = false;
     private boolean threeWayOneDraw = false;
@@ -30,8 +32,8 @@ public class MapPieces extends JButton implements ActionListener, ComponentListe
     private boolean threeWayFourDraw = false;
     private boolean fourWayDraw = false;
     private boolean remove = true;
-    private String imgPath = "images/trafficLight.png";
-    private final BufferedImage image = ImageIO.read(getClass().getResourceAsStream(imgPath));
+    private String imgPath = "images/trafficLight.png"; // traffic light image path
+    private final BufferedImage image = ImageIO.read(getClass().getResourceAsStream(imgPath)); // load traffic light as image
 
     MapPieces(JRadioButton oneWayRoadButton, JRadioButton threeWayRoadButton, JRadioButton fourWayRoadButton, JLabel oneWayIcon, JLabel threeWayIcon, int position, ArrayList<Road> roadArrayList, int map, JRadioButton trafficLightButton, ArrayList<TrafficLight> trafficLightArrayList) throws IOException {
         ImageIcon oneWay = new ImageIcon(this.getClass().getResource("images/oneWay.png"));
@@ -54,7 +56,7 @@ public class MapPieces extends JButton implements ActionListener, ComponentListe
         this.roadArrayList = roadArrayList;
         this.trafficLightArrayList = trafficLightArrayList;
         this.map = map;
-        for (TrafficLight trafficLight : trafficLightArrayList) {
+        for (TrafficLight trafficLight : trafficLightArrayList) { // goes through trafficLightArrayList to see if a traffic light should be drawn
             if (trafficLight.getLocation() == position) {
                 switch (trafficLight.getRoadName()) {
                     case "oneWay":
@@ -84,7 +86,7 @@ public class MapPieces extends JButton implements ActionListener, ComponentListe
             }
             repaint();
         }
-        for (Road road : roadArrayList) {
+        for (Road road : roadArrayList) {// goes through roadArrayList to see if a road icon should be added to the button
             // redesign code to match new names - figure out how to use resize code
             if (road.getLocation() == position) {
                 switch (road.getName()) {
@@ -123,7 +125,6 @@ public class MapPieces extends JButton implements ActionListener, ComponentListe
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // for loop for each piece in grid to replace image with code below - use code to get name of current image
         if (trafficLightButton.isSelected()) {
             remove = false;
         }

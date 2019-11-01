@@ -1,9 +1,9 @@
 public class Vehicle {
     private int length;// length of the vehicle
     private int location;// location of the vehicle on the map
-    private double roadLocation;
-    private int carX;
-    private int carY;
+    private double roadLocation; // location of vehicle on on road
+    private int carX; // set car X coordinate
+    private int carY; // set car Y coordinate
     private char roadDirection;// used to control which way a vehicle is moving and what side of the road it is on
     private int speed; // current speed of the vehicle
     private String name; // name of the vehicle (e.g. car, bus, bike)

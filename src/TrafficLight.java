@@ -29,7 +29,7 @@ class TrafficLight implements Serializable {
         return changedColourTimer;
     }
 
-    void colourTimer() { // rotates through to 5 and when 0 lights can change colours
+    void colourTimer() { // rotates through to 50 and when 0 lights can change colours
         if (changedColourTimer >= 0) {
             changedColourTimer += 1;
         }
@@ -42,7 +42,7 @@ class TrafficLight implements Serializable {
         return roadName;
     }
 
-    void threeWayCycle() {
+    void threeWayCycle() { // rotates the lightCycle and sets the colour for three way road pieces
         switch (roadName) {
             case "threeWayOne":
                 if (lightCycle <= 20) {
@@ -179,7 +179,7 @@ class TrafficLight implements Serializable {
         }
     }
 
-    void fourWayCycle() {
+    void fourWayCycle() { // rotates the lightCycle and sets the colour for four way road pieces
         if (lightCycle <= 20) {
             lightCycle = lightCycle + 0.5;
             if (trafficLightNumber == 3) {
